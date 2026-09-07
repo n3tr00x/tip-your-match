@@ -36,7 +36,7 @@ model User {
   sessions          Session[]
   accounts          Account[]
   leaguesAdmin      League[]  @relation("LeagueAdmin")
-  leagueMemberships LeagueMember[] 
+  leagueMemberships LeagueMember[]
   predictions       Prediction[]
 
   @@unique([email])
@@ -94,24 +94,24 @@ model Verification {
 }
 
 model League {
-  id String @id @default(cuid())
-  name String
-  code String
-  adminId String
-  admin User @relation("LeagueAdmin", fields: [adminId], references: [id])
-  members LeagueMember[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id        String         @id @default(cuid())
+  name      String
+  code      String         @unique
+  adminId   String
+  admin     User           @relation("LeagueAdmin", fields: [adminId], references: [id], onDelete: Restrict)
+  members   LeagueMember[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
 
   @@map("league")
 }
 
 model LeagueMember {
-  id String @id @default(cuid())
+  id       String @id @default(cuid())
   leagueId String
-  league League @relation(fields: [leagueId], references: [id])
-  userId String
-  user User @relation(fields: [userId], references: [id])
+  league   League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([leagueId, userId])
   @@index([userId])
@@ -120,9 +120,9 @@ model LeagueMember {
 
 model Fixture {
   id           String        @id @default(cuid())
-  apiId        Int           @unique   
+  apiId        Int           @unique
   season       Int
-  round        String        
+  round        String
   kickoff      DateTime
   status       FixtureStatus @default(SCHEDULED)
   homeTeam     String
@@ -150,7 +150,7 @@ model FixtureEvent {
   team        String
   playerName  String?
   type        EventType
-  detail      String?   
+  detail      String?
   createdAt   DateTime  @default(now())
 
   @@index([fixtureId])
@@ -165,7 +165,7 @@ model Prediction {
   fixture   Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
   homeScore Int
   awayScore Int
-  points    Int?     
+  points    Int?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

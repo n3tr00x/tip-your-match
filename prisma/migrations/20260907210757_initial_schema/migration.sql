@@ -75,6 +75,9 @@ CREATE TABLE "prediction" (
 );
 
 -- CreateIndex
+CREATE UNIQUE INDEX "league_code_key" ON "league"("code");
+
+-- CreateIndex
 CREATE INDEX "league_member_userId_idx" ON "league_member"("userId");
 
 -- CreateIndex
@@ -105,10 +108,10 @@ CREATE UNIQUE INDEX "prediction_userId_fixtureId_key" ON "prediction"("userId", 
 ALTER TABLE "league" ADD CONSTRAINT "league_adminId_fkey" FOREIGN KEY ("adminId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "league_member" ADD CONSTRAINT "league_member_leagueId_fkey" FOREIGN KEY ("leagueId") REFERENCES "league"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "league_member" ADD CONSTRAINT "league_member_leagueId_fkey" FOREIGN KEY ("leagueId") REFERENCES "league"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "league_member" ADD CONSTRAINT "league_member_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "league_member" ADD CONSTRAINT "league_member_userId_fkey" FOREIGN KEY ("userId") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "fixture_event" ADD CONSTRAINT "fixture_event_fixtureId_fkey" FOREIGN KEY ("fixtureId") REFERENCES "fixture"("id") ON DELETE CASCADE ON UPDATE CASCADE;
