@@ -10,6 +10,7 @@
 		"prisma:init": "prisma init",
 		"prisma:dev": "prisma dev",
 		"prisma:generate": "prisma generate",
+		"prisma:reset": "prisma migrate reset",
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:studio": "prisma studio"
 	},

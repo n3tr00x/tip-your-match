@@ -8,16 +8,36 @@ datasource db {
   provider = "postgresql"
 }
 
+enum FixtureStatus {
+  SCHEDULED
+  LIVE
+  FINISHED
+  POSTPONED
+  CANCELLED
+}
+
+enum EventType {
+  GOAL
+  OWN_GOAL
+  PENALTY_GOAL
+  YELLOW_CARD
+  RED_CARD
+  YELLOW_RED_CARD
+}
+
 model User {
-  id            String    @id
-  name          String
-  email         String
-  emailVerified Boolean   @default(false)
-  image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  sessions      Session[]
-  accounts      Account[]
+  id                String    @id
+  name              String
+  email             String
+  emailVerified     Boolean   @default(false)
+  image             String?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  sessions          Session[]
+  accounts          Account[]
+  leaguesAdmin      League[]  @relation("LeagueAdmin")
+  leagueMemberships LeagueMember[]
+  predictions       Prediction[]
 
   @@unique([email])
   @@map("user")
@@ -71,4 +91,86 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model League {
+  id        String         @id @default(cuid())
+  name      String
+  code      String         @unique
+  adminId   String
+  admin     User           @relation("LeagueAdmin", fields: [adminId], references: [id], onDelete: Restrict)
+  members   LeagueMember[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@map("league")
+}
+
+model LeagueMember {
+  id       String @id @default(cuid())
+  leagueId String
+  league   League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
+  userId   String
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([leagueId, userId])
+  @@index([userId])
+  @@map("league_member")
+}
+
+model Fixture {
+  id           String        @id @default(cuid())
+  apiId        Int           @unique
+  season       Int
+  round        String
+  kickoff      DateTime
+  status       FixtureStatus @default(SCHEDULED)
+  homeTeam     String
+  homeTeamLogo String
+  awayTeam     String
+  awayTeamLogo String
+  homeScore    Int?
+  awayScore    Int?
+  events       FixtureEvent[]
+  predictions  Prediction[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  @@index([season, round])
+  @@index([kickoff])
+  @@map("fixture")
+}
+
+model FixtureEvent {
+  id          String    @id @default(cuid())
+  fixtureId   String
+  fixture     Fixture   @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+  minute      Int
+  extraMinute Int?
+  team        String
+  playerName  String?
+  type        EventType
+  detail      String?
+  createdAt   DateTime  @default(now())
+
+  @@index([fixtureId])
+  @@map("fixture_event")
+}
+
+model Prediction {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fixtureId String
+  fixture   Fixture  @relation(fields: [fixtureId], references: [id], onDelete: Cascade)
+  homeScore Int
+  awayScore Int
+  points    Int?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, fixtureId])
+  @@index([userId])
+  @@index([fixtureId])
+  @@map("prediction")
 }
