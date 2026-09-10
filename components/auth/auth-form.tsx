@@ -3,7 +3,7 @@
 import Link from 'next/link';
 
 import { AuthTabs } from '@/components/auth/auth-tabs';
-import { OAuthButtons } from '@/components/auth/o-auth-buttons';
+import { OAuthButtons } from '@/components/auth/oauth-buttons';
 import { Button } from '@/components/ui/button';
 import {
 	Card,
