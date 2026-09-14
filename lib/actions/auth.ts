@@ -27,8 +27,6 @@ export async function signup(data: FormData) {
 		confirmPassword: data.get('confirmPassword') as string,
 	});
 
-	await new Promise(resolve => setTimeout(resolve, 3000));
-
 	if (!parsedData.success) {
 		const { fieldErrors } = z.flattenError(parsedData.error);
 		console.error(Object.values(fieldErrors).flat());
@@ -44,6 +42,11 @@ export async function signup(data: FormData) {
 		if (error instanceof APIError) {
 			return { success: false, errors: error.message };
 		}
+		console.error('Unexpected signup error', error);
+		return {
+			success: false,
+			errors: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.',
+		};
 	}
 
 	return { success: true };
@@ -70,6 +73,11 @@ export async function signin(data: FormData) {
 		if (error instanceof APIError) {
 			return { success: false, errors: error.message };
 		}
+		console.error('Unexpected signin error', error);
+		return {
+			success: false,
+			errors: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.',
+		};
 	}
 
 	return { success: true };
