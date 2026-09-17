@@ -3,6 +3,8 @@
 import * as z from 'zod';
 import { auth } from '../auth';
 import { APIError } from 'better-auth/api';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 const signUpSchema = z
 	.object({
@@ -74,6 +76,55 @@ export async function signin(data: FormData) {
 			return { success: false, errors: error.message };
 		}
 		console.error('Unexpected signin error', error);
+		return {
+			success: false,
+			errors: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.',
+		};
+	}
+
+	return { success: true };
+}
+
+export async function signInWithDiscord() {
+	try {
+		const result = await auth.api.signInSocial({
+			body: {
+				provider: 'discord',
+				callbackURL: '/',
+			},
+			headers: await headers(),
+		});
+
+		if (!result?.url) {
+			return {
+				success: false,
+				errors: 'Nie udało się wygenerować adresu logowania Discord.',
+			};
+		}
+
+		return { success: true, url: result.url };
+	} catch (error) {
+		if (error instanceof APIError) {
+			return { success: false, errors: error.message };
+		}
+		console.error('Unexpected sign in with Discord error', error);
+		return {
+			success: false,
+			errors: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.',
+		};
+	}
+}
+
+export async function signout() {
+	try {
+		await auth.api.signOut({
+			headers: await headers(),
+		});
+	} catch (error) {
+		if (error instanceof APIError) {
+			return { success: false, errors: error.message };
+		}
+		console.error('Unexpected signout error', error);
 		return {
 			success: false,
 			errors: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.',

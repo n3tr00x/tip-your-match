@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button';
-import { GoogleIcon, DiscordIcon } from '@/components/ui/icons';
+import { DiscordIcon, GoogleIcon } from '@/components/ui/icons';
+import { DiscordSignInButton } from './discord-sign-in-button';
 
 export function OAuthButtons() {
 	return (
@@ -20,10 +21,7 @@ export function OAuthButtons() {
 					<GoogleIcon />
 					Google
 				</Button>
-				<Button variant="outline" type="button" className="w-full">
-					<DiscordIcon />
-					Discord
-				</Button>
+				<DiscordSignInButton />
 			</div>
 		</div>
 	);

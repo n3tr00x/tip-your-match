@@ -5,7 +5,7 @@ export function errorFormFieldsToast(errors: string | string[]) {
 	let description: ReactNode;
 
 	if (typeof errors === 'string') {
-		description = <div className="flex flex-col text-xs">{errors}</div>;
+		description = <span className="flex flex-col text-xs">{errors}</span>;
 	}
 
 	if (Array.isArray(errors)) {
