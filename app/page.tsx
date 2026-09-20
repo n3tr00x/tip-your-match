@@ -1,12 +1,15 @@
 'use client';
 
+import { AuthRedirectToast } from '@/components/auth/auth-redirect-toast';
 import { Button } from '@/components/ui/button';
 import { signout } from '@/lib/actions/auth';
-import { errorFormFieldsToast } from '@/lib/toasts/auth';
-import { redirect } from 'next/navigation';
-import { SubmitEvent } from 'react';
+import { errorFormFieldsToast, successSignOutToast } from '@/lib/toasts/auth';
+import { useRouter } from 'next/navigation';
+import { SubmitEvent, Suspense } from 'react';
 
 export default function Home() {
+	const router = useRouter();
+
 	const signOutHandler = async (event: SubmitEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		const result = await signout();
@@ -16,11 +19,17 @@ export default function Home() {
 			return;
 		}
 
-		redirect('/login');
+		if (result.success) {
+			successSignOutToast();
+			router.push('/login');
+		}
 	};
 
 	return (
 		<div className="flex justify-center">
+			<Suspense>
+				<AuthRedirectToast />
+			</Suspense>
 			<form onSubmit={signOutHandler}>
 				<Button type="submit">Click me</Button>
 			</form>

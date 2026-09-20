@@ -1,6 +1,5 @@
-import { Button } from '@/components/ui/button';
-import { DiscordIcon, GoogleIcon } from '@/components/ui/icons';
 import { DiscordSignInButton } from './discord-sign-in-button';
+import { GoogleSignInButton } from './google-sign-in-button';
 
 export function OAuthButtons() {
 	return (
@@ -17,10 +16,7 @@ export function OAuthButtons() {
 			</div>
 
 			<div className="grid grid-cols-2 gap-3">
-				<Button variant="outline" type="button" className="w-full">
-					<GoogleIcon />
-					Google
-				</Button>
+				<GoogleSignInButton />
 				<DiscordSignInButton />
 			</div>
 		</div>

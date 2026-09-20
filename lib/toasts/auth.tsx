@@ -40,3 +40,11 @@ export function successSignInToast() {
 		description: 'Zostałeś pomyślnie zalogowany.',
 	});
 }
+
+export function successSignOutToast() {
+	return toast.add({
+		type: 'success',
+		title: 'Wylogowanie zakończone sukcesem',
+		description: 'Zostałeś pomyślnie wylogowany.',
+	});
+}

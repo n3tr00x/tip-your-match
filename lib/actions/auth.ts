@@ -90,7 +90,7 @@ export async function signInWithDiscord() {
 		const result = await auth.api.signInSocial({
 			body: {
 				provider: 'discord',
-				callbackURL: '/',
+				callbackURL: '/?login=success',
 			},
 			headers: await headers(),
 		});
@@ -107,7 +107,9 @@ export async function signInWithDiscord() {
 		if (error instanceof APIError) {
 			return { success: false, errors: error.message };
 		}
+
 		console.error('Unexpected sign in with Discord error', error);
+
 		return {
 			success: false,
 			errors: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.',
@@ -124,7 +126,9 @@ export async function signout() {
 		if (error instanceof APIError) {
 			return { success: false, errors: error.message };
 		}
+
 		console.error('Unexpected signout error', error);
+
 		return {
 			success: false,
 			errors: 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.',
