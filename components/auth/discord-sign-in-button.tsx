@@ -1,13 +1,10 @@
 'use client';
 
-import { useTransition } from 'react';
 import { Button } from '@/components/ui/button';
 import { DiscordIcon } from '@/components/ui/icons';
-import {
-	signInWithDiscord,
-	signInWithSocialProvider,
-} from '@/lib/actions/auth';
+import { signInWithSocialProvider } from '@/lib/actions/auth';
 import { errorFormFieldsToast } from '@/lib/toasts/auth';
+import { useTransition } from 'react';
 
 export function DiscordSignInButton() {
 	const [isPending, startTransition] = useTransition();

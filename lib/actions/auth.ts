@@ -1,10 +1,9 @@
 'use server';
 
-import * as z from 'zod';
-import { auth } from '../auth';
 import { APIError } from 'better-auth/api';
 import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
+import * as z from 'zod';
+import { auth } from '../auth';
 
 const signUpSchema = z
 	.object({
