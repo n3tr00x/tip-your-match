@@ -1,0 +1,24 @@
+import { DiscordSignInButton } from './discord-sign-in-button';
+import { GoogleSignInButton } from './google-sign-in-button';
+
+export function OAuthButtons() {
+	return (
+		<div className="w-full space-y-3 my-2">
+			<div className="relative">
+				<div className="absolute inset-0 flex items-center">
+					<span className="w-full border-t" />
+				</div>
+				<div className="relative flex justify-center text-xs uppercase">
+					<span className="bg-card px-2 text-muted-foreground">
+						lub kontynuuj z
+					</span>
+				</div>
+			</div>
+
+			<div className="grid grid-cols-2 gap-3">
+				<GoogleSignInButton />
+				<DiscordSignInButton />
+			</div>
+		</div>
+	);
+}
