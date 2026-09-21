@@ -1,27 +1,23 @@
 import { useTransition } from 'react';
-import { useRouter } from 'next/navigation';
 
 import { Button } from '@/components/ui/button';
 import { GoogleIcon } from '@/components/ui/icons';
-import { authClient } from '@/lib/auth-client';
-import { successSignInToast } from '@/lib/toasts/auth';
+import { signInWithSocialProvider } from '@/lib/actions/auth';
+import { errorFormFieldsToast } from '@/lib/toasts/auth';
 
 export function GoogleSignInButton() {
 	const [isPending, startTransition] = useTransition();
 
 	const signInWithGoogleHandler = () => {
 		startTransition(async () => {
-			await authClient.signIn.social(
-				{ provider: 'google', callbackURL: '/' },
-				{
-					onSuccess: () => {
-						successSignInToast();
-					},
-					onError: ctx => {
-						console.error('Google sign-in error:', ctx);
-					},
-				},
-			);
+			const result = await signInWithSocialProvider('google');
+
+			if (!result.success || !result.url) {
+				errorFormFieldsToast(result.errors ?? 'Wystąpił błąd.');
+				return;
+			}
+
+			window.location.href = result.url;
 		});
 	};
 

@@ -85,11 +85,11 @@ export async function signin(data: FormData) {
 	return { success: true };
 }
 
-export async function signInWithDiscord() {
+export async function signInWithSocialProvider(provider: 'discord' | 'google') {
 	try {
 		const result = await auth.api.signInSocial({
 			body: {
-				provider: 'discord',
+				provider: provider,
 				callbackURL: '/?login=success',
 			},
 			headers: await headers(),
@@ -98,7 +98,7 @@ export async function signInWithDiscord() {
 		if (!result?.url) {
 			return {
 				success: false,
-				errors: 'Nie udało się wygenerować adresu logowania Discord.',
+				errors: `Nie udało się wygenerować adresu logowania ${provider}.`,
 			};
 		}
 
@@ -108,7 +108,7 @@ export async function signInWithDiscord() {
 			return { success: false, errors: error.message };
 		}
 
-		console.error('Unexpected sign in with Discord error', error);
+		console.error(`Unexpected sign in with ${provider} error`, error);
 
 		return {
 			success: false,
