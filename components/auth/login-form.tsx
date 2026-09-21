@@ -1,27 +1,28 @@
 'use client';
 
-import { SubmitEvent, useTransition } from 'react';
-import { redirect } from 'next/navigation';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { SubmitEvent, useTransition } from 'react';
 
-import { signin } from '@/lib/actions/auth';
-import { errorFormFieldsToast, successSignInToast } from '@/lib/toasts/auth';
 import { AuthTabs } from '@/components/auth/auth-tabs';
 import { OAuthButtons } from '@/components/auth/oauth-buttons';
 import { Button } from '@/components/ui/button';
+import { signin } from '@/lib/actions/auth';
+import { errorFormFieldsToast, successSignInToast } from '@/lib/toasts/auth';
 
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 
 export function LoginForm() {
+	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 
 	const signInHandler = async (event: SubmitEvent<HTMLFormElement>) => {
@@ -36,8 +37,12 @@ export function LoginForm() {
 				return;
 			}
 
-			successSignInToast();
-			redirect('/');
+			if (result.success) {
+				successSignInToast();
+				router.push('/');
+			}
+
+			// redirect('/');
 		});
 	};
 

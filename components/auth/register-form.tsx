@@ -1,9 +1,7 @@
 'use client';
 
-import { errorFormFieldsToast, successSignUpToast } from '@/lib/toasts/auth';
-
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { SubmitEvent, useTransition } from 'react';
 
 import { AuthTabs } from '@/components/auth/auth-tabs';
@@ -20,8 +18,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { signup } from '@/lib/actions/auth';
+import { errorFormFieldsToast, successSignUpToast } from '@/lib/toasts/auth';
 
 export function RegisterForm() {
+	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 
 	const signUpHandler = async (event: SubmitEvent<HTMLFormElement>) => {
@@ -36,8 +36,10 @@ export function RegisterForm() {
 				return;
 			}
 
-			successSignUpToast();
-			redirect('/login');
+			if (result.success) {
+				successSignUpToast();
+				router.push('/login');
+			}
 		});
 	};
 
