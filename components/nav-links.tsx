@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
 const links = [
 	{ href: '/predictions', label: 'Typuj' },
@@ -25,12 +24,10 @@ export function NavLinks() {
 						key={href}
 						href={href}
 						aria-current={isActive ? 'page' : undefined}
-						className={cn(
-							buttonVariants({
-								variant: isActive ? 'link' : 'ghost',
-								size: 'sm',
-							}),
-						)}
+						className={buttonVariants({
+							variant: isActive ? 'link' : 'ghost',
+							size: 'sm',
+						})}
 					>
 						{label}
 					</Link>

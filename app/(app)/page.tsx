@@ -1,7 +1,5 @@
-'use client';
-
-import { AuthRedirectToast } from '@/components/auth/auth-redirect-toast';
 import { Suspense } from 'react';
+import { AuthRedirectToast } from '@/components/auth/auth-redirect-toast';
 
 export default function Home() {
 	return (
