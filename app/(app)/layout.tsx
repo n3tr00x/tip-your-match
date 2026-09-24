@@ -6,7 +6,9 @@ export default function AppLayout({ children }: LayoutProps<'/'>) {
 		<>
 			<Navbar />
 			<MobileNavbar />
-			<main className="container mx-auto px-6 pb-20 md:pb-0">{children}</main>
+			<main className="container mx-auto px-6 pb-[calc(3.5rem+env(safe-area-inset-bottom))] md:pb-0">
+				{children}
+			</main>
 		</>
 	);
 }

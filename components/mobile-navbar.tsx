@@ -10,7 +10,7 @@ export function MobileNavbar() {
 
 	return (
 		<nav
-			aria-label="Main navigation"
+			aria-label="Główna nawigacja"
 			className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/60 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 md:hidden"
 		>
 			<ul className="grid grid-cols-4">

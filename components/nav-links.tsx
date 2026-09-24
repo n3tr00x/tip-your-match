@@ -11,7 +11,7 @@ export function NavLinks() {
 	return (
 		<nav
 			className="hidden md:flex items-center gap-1"
-			aria-label="Main navigation"
+			aria-label="Główna nawigacja"
 		>
 			{navLinks.map(({ href, label }) => {
 				const isActive = isLinkActive(pathname, href);
