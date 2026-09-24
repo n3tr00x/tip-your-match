@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Inter, Roboto } from 'next/font/google';
 
 import { Toaster } from '@/components/ui/toast';
@@ -14,6 +14,8 @@ const roboto = Roboto({
 	subsets: ['latin'],
 	variable: '--font-sans',
 });
+
+export const viewport: Viewport = { viewportFit: 'cover' };
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
