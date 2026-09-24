@@ -11,7 +11,7 @@ export function SignOutButton() {
 	const router = useRouter();
 	const [isPending, startTransition] = useTransition();
 
-	const signOutHandler = async () => {
+	const signOutHandler = () => {
 		startTransition(async () => {
 			const result = await signout();
 

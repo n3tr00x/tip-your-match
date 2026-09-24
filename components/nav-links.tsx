@@ -3,21 +3,18 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { buttonVariants } from '@/components/ui/button';
-
-const links = [
-	{ href: '/predictions', label: 'Typuj' },
-	{ href: '/schedule', label: 'Terminarz' },
-	{ href: '/ranking', label: 'Ranking' },
-	{ href: '/leagues', label: 'Ligi' },
-];
+import { isLinkActive, navLinks } from '@/lib/nav-links';
 
 export function NavLinks() {
 	const pathname = usePathname();
 
 	return (
-		<nav className="flex items-center gap-1">
-			{links.map(({ href, label }) => {
-				const isActive = pathname === href || pathname.startsWith(`${href}/`);
+		<nav
+			className="hidden md:flex items-center gap-1"
+			aria-label="Main navigation"
+		>
+			{navLinks.map(({ href, label }) => {
+				const isActive = isLinkActive(pathname, href);
 
 				return (
 					<Link
