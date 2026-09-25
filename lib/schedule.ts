@@ -106,3 +106,17 @@ export function getRoundSummary(round: Round) {
 		lastKickoff,
 	};
 }
+
+export function partitionRounds(rounds: Round[], currentRound?: string) {
+	const activeRounds = rounds.filter(
+		round => getRoundState(round.round, currentRound) !== 'finished',
+	);
+	const finishedRounds = rounds.filter(
+		round => getRoundState(round.round, currentRound) === 'finished',
+	);
+
+	return {
+		activeRounds,
+		finishedRounds,
+	};
+}
