@@ -1,0 +1,20 @@
+import { RoundAccordion } from '@/components/schedule/round-accordion';
+import {
+	getCurrentRound,
+	getSeasonFixtures,
+	groupFixturesByRound,
+} from '@/lib/schedule';
+
+export default async function SchedulePage() {
+	const fixtures = await getSeasonFixtures(2026);
+	const rounds = groupFixturesByRound(fixtures);
+	const currentRound = getCurrentRound(fixtures);
+
+	return (
+		<div className="max-w-7xl mx-auto my-4">
+			<div className="space-y-4">
+				<RoundAccordion rounds={rounds} currentRound={currentRound} />
+			</div>
+		</div>
+	);
+}
