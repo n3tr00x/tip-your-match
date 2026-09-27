@@ -2,11 +2,11 @@ import type { Fixture } from '@/app/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 
 export type Round = {
-	round: string;
+	round: number;
 	fixtures: Fixture[];
 };
 
-export type RoundState = 'finished' | 'current' | 'upcoming';
+export type RoundState = 'finished' | 'current' | 'upcoming' | 'pending';
 
 export async function getSeasonFixtures(season: number) {
 	const schedule = await prisma.fixture.findMany({
@@ -18,7 +18,7 @@ export async function getSeasonFixtures(season: number) {
 }
 
 export function groupFixturesByRound(fixtures: Fixture[]) {
-	const fixturesByRound = new Map<string, Fixture[]>();
+	const fixturesByRound = new Map<number, Fixture[]>();
 
 	for (const fixture of fixtures) {
 		const roundFixtures = fixturesByRound.get(fixture.round);
@@ -33,17 +33,17 @@ export function groupFixturesByRound(fixtures: Fixture[]) {
 	return Array.from(fixturesByRound, ([round, fixtures]) => ({
 		round,
 		fixtures,
-	})).sort((a, b) => Number(a.round) - Number(b.round));
+	})).sort((a, b) => a.round - b.round);
 }
 
 export function getCurrentRound(
 	fixtures: Fixture[],
 	now = new Date(),
-): string | undefined {
+): number | undefined {
 	const playable = fixtures.filter(
 		fixture => fixture.status !== 'POSTPONED' && fixture.status !== 'CANCELLED',
 	);
-	const roundNumbers = playable.map(fixture => Number(fixture.round));
+	const roundNumbers = playable.map(fixture => fixture.round);
 
 	if (roundNumbers.length === 0) {
 		return undefined;
@@ -51,44 +51,50 @@ export function getCurrentRound(
 
 	const startedRounds = playable
 		.filter(fixture => fixture.kickoff <= now)
-		.map(fixture => Number(fixture.round));
+		.map(fixture => fixture.round);
 
 	if (startedRounds.length === 0) {
-		return String(Math.min(...roundNumbers));
+		return Math.min(...roundNumbers);
 	}
 
 	const lastStartedRound = Math.max(...startedRounds);
 	const isLastStartedRoundFinished = playable
-		.filter(fixture => Number(fixture.round) === lastStartedRound)
+		.filter(fixture => fixture.round === lastStartedRound)
 		.every(fixture => fixture.status === 'FINISHED');
 	const nextRound = lastStartedRound + 1;
 
 	if (isLastStartedRoundFinished && roundNumbers.includes(nextRound)) {
-		return String(nextRound);
+		return nextRound;
 	}
 
-	return String(lastStartedRound);
+	return lastStartedRound;
+}
+
+export function isRoundCompleted(round: Round) {
+	return round.fixtures.every(
+		fixture => fixture.status === 'FINISHED' || fixture.status === 'CANCELLED',
+	);
 }
 
 export function getRoundState(
-	round: string,
-	currentRound: string | undefined,
+	round: Round,
+	currentRound: number | undefined,
 ): RoundState {
-	if (!currentRound) {
+	if (currentRound === undefined) {
 		return 'upcoming';
 	}
 
-	const difference = Number(round) - Number(currentRound);
+	const difference = round.round - currentRound;
 
-	if (difference < 0) {
-		return 'finished';
+	if (difference > 0) {
+		return 'upcoming';
 	}
 
 	if (difference === 0) {
 		return 'current';
 	}
 
-	return 'upcoming';
+	return isRoundCompleted(round) ? 'finished' : 'pending';
 }
 
 export function getRoundSummary(round: Round) {
@@ -107,12 +113,12 @@ export function getRoundSummary(round: Round) {
 	};
 }
 
-export function partitionRounds(rounds: Round[], currentRound?: string) {
+export function partitionRounds(rounds: Round[], currentRound?: number) {
 	const activeRounds = rounds.filter(
-		round => getRoundState(round.round, currentRound) !== 'finished',
+		round => getRoundState(round, currentRound) !== 'finished',
 	);
 	const finishedRounds = rounds.filter(
-		round => getRoundState(round.round, currentRound) === 'finished',
+		round => getRoundState(round, currentRound) === 'finished',
 	);
 
 	return {

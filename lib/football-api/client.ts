@@ -13,15 +13,19 @@ function mapStatus(status: FootballDataMatchStatus): FixtureStatus {
 			return 'SCHEDULED';
 		case 'IN_PLAY':
 		case 'PAUSED':
+		case 'PENALTY_SHOOTOUT':
+		case 'EXTRA_TIME':
 			return 'LIVE';
 		case 'FINISHED':
 		case 'AWARDED':
 			return 'FINISHED';
 		case 'POSTPONED':
-			return 'POSTPONED';
 		case 'SUSPENDED':
+			return 'POSTPONED';
 		case 'CANCELLED':
 			return 'CANCELLED';
+		default:
+			throw new Error(`Unknown match status: ${status}`);
 	}
 }
 
@@ -32,7 +36,7 @@ export function mapMatchToFixtureData(
 	return {
 		apiId: match.id,
 		season: season,
-		round: match.matchday.toString(),
+		round: match.matchday,
 		kickoff: new Date(match.utcDate),
 		status: mapStatus(match.status),
 		homeTeam: match.homeTeam.name,
@@ -58,7 +62,10 @@ export async function fetchSeasonFixtures(
 		'X-Auth-Token': FOOTBALL_API_KEY,
 	};
 
-	const response = await fetch(url, { headers });
+	const response = await fetch(url, {
+		headers,
+		signal: AbortSignal.timeout(10000),
+	});
 
 	if (!response.ok) {
 		throw new Error(`Failed to fetch season fixtures: ${response.statusText}`);

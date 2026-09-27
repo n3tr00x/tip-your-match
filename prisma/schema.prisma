@@ -122,7 +122,7 @@ model Fixture {
   id           String        @id @default(cuid())
   apiId        Int           @unique
   season       Int
-  round        String
+  round        Int
   kickoff      DateTime
   status       FixtureStatus @default(SCHEDULED)
   homeTeam     String

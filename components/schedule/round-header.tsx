@@ -1,3 +1,5 @@
+import { ClockAlertIcon } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 import { getRoundSummary, type Round, type RoundState } from '@/lib/schedule';
 import { cn, formatDateRange } from '@/lib/utils';
 
@@ -22,9 +24,15 @@ export function RoundHeader({ round, state }: RoundHeaderProps) {
 					Kolejka {round.round}
 				</span>
 				{state === 'current' && (
-					<span className="bg-primary px-1.5 py-0.5 text-[0.625rem] uppercase tracking-widest text-primary-foreground">
+					<Badge className="bg-primary text-primary-foreground px-1.5 py-0.5">
 						Aktualna
-					</span>
+					</Badge>
+				)}
+				{state === 'pending' && (
+					<Badge className="border border-primary text-foreground px-1.5 py-0.5">
+						<ClockAlertIcon />
+						Zaległa
+					</Badge>
 				)}
 			</div>
 

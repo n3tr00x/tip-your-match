@@ -4,7 +4,7 @@ import { getRoundState, type Round } from '@/lib/schedule';
 
 type RoundAccordionProps = {
 	rounds: Round[];
-	currentRound?: string;
+	currentRound?: number;
 };
 
 export function RoundAccordion({ rounds, currentRound }: RoundAccordionProps) {
@@ -15,7 +15,7 @@ export function RoundAccordion({ rounds, currentRound }: RoundAccordionProps) {
 					<RoundItem
 						key={round.round}
 						round={round}
-						state={getRoundState(round.round, currentRound)}
+						state={getRoundState(round, currentRound)}
 					/>
 				);
 			})}

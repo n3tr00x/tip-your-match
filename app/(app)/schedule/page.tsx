@@ -1,3 +1,4 @@
+import { connection } from 'next/server';
 import { FinishedRounds } from '@/components/schedule/finished-rounds';
 import { RoundAccordion } from '@/components/schedule/round-accordion';
 import {
@@ -8,6 +9,8 @@ import {
 } from '@/lib/schedule';
 
 export default async function SchedulePage() {
+	await connection();
+
 	const fixtures = await getSeasonFixtures(2026);
 	const rounds = groupFixturesByRound(fixtures);
 	const currentRound = getCurrentRound(fixtures);

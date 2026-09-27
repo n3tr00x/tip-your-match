@@ -7,7 +7,9 @@ export type FootballDataMatchStatus =
 	| 'AWARDED'
 	| 'POSTPONED'
 	| 'SUSPENDED'
-	| 'CANCELLED';
+	| 'CANCELLED'
+	| 'PENALTY_SHOOTOUT'
+	| 'EXTRA_TIME';
 
 export type FootballDataMatch = {
 	id: number;
