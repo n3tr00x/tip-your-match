@@ -1,17 +1,19 @@
 import { connection } from 'next/server';
 import { FinishedRounds } from '@/components/schedule/finished-rounds';
 import { RoundAccordion } from '@/components/schedule/round-accordion';
+import { getSeasonFixtures } from '@/lib/schedule/queries';
 import {
 	getCurrentRound,
-	getSeasonFixtures,
 	groupFixturesByRound,
 	partitionRounds,
-} from '@/lib/schedule';
+} from '@/lib/schedule/rounds';
+import { requireEnvVariable } from '@/lib/utils';
 
 export default async function SchedulePage() {
 	await connection();
 
-	const fixtures = await getSeasonFixtures(2026);
+	const season = Number(requireEnvVariable('FOOTBALL_API_SEASON'));
+	const fixtures = await getSeasonFixtures(season);
 	const rounds = groupFixturesByRound(fixtures);
 	const currentRound = getCurrentRound(fixtures);
 	const { finishedRounds, activeRounds } = partitionRounds(

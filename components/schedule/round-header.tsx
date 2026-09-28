@@ -1,7 +1,13 @@
 import { ClockAlertIcon } from 'lucide-react';
+
 import { Badge } from '@/components/ui/badge';
-import { getRoundSummary, type Round, type RoundState } from '@/lib/schedule';
-import { cn, formatDateRange } from '@/lib/utils';
+import {
+	getRoundSummary,
+	type Round,
+	type RoundState,
+} from '@/lib/schedule/rounds';
+import { formatDateRange } from '@/lib/date';
+import { cn } from '@/lib/utils';
 
 type RoundHeaderProps = {
 	round: Round;

@@ -1,6 +1,6 @@
 import { RoundItem } from '@/components/schedule/round-item';
 import { Accordion } from '@/components/ui/accordion';
-import { getRoundState, type Round } from '@/lib/schedule';
+import { getRoundState, type Round } from '@/lib/schedule/rounds';
 
 type RoundAccordionProps = {
 	rounds: Round[];

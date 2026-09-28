@@ -5,7 +5,7 @@ import {
 } from '@/components/ui/accordion';
 import { FixtureCard } from '@/components/schedule/fixture-card';
 import { RoundHeader } from '@/components/schedule/round-header';
-import type { Round, RoundState } from '@/lib/schedule';
+import type { Round, RoundState } from '@/lib/schedule/rounds';
 import { cn } from '@/lib/utils';
 
 export function RoundItem({
@@ -16,7 +16,7 @@ export function RoundItem({
 	state: RoundState;
 }) {
 	return (
-		<AccordionItem key={round.round} value={round.round}>
+		<AccordionItem value={round.round}>
 			<AccordionTrigger
 				className={cn(
 					'items-center px-4 hover:bg-muted/50 hover:no-underline aria-expanded:bg-muted/30',

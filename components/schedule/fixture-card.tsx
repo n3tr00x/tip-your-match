@@ -2,13 +2,13 @@ import type { Fixture, FixtureStatus } from '@/app/generated/prisma/client';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { TeamRow } from '@/components/schedule/team-row';
 import { getMatchOutcome, MatchOutcome } from '@/lib/match-outcome';
-import { formatMatchDate } from '@/lib/utils';
+import { formatMatchDate } from '@/lib/date';
 
 type FixtureCardProps = {
 	fixture: Fixture;
 };
 
-const mapStatusToLabel: Record<FixtureStatus, string> = {
+const STATUS_LABELS: Record<FixtureStatus, string> = {
 	SCHEDULED: 'Zaplanowany',
 	LIVE: 'Na żywo',
 	FINISHED: 'Zakończony',
@@ -35,11 +35,11 @@ export function FixtureCard({ fixture }: FixtureCardProps) {
 	return (
 		<Card size="sm" className="ring-0 border-2 border-primary/75 shadow">
 			<CardHeader className="flex justify-between items-center">
-				<CardTitle className="text-sm text-muted-foreground tracking-widest text-[0.625rem] uppercase">
+				<CardTitle className="text-muted-foreground tracking-widest text-[0.625rem] uppercase">
 					{date} · {time}
 				</CardTitle>
 				<span className="text-xs text-muted-foreground tracking-widest text-[0.625rem] uppercase">
-					{mapStatusToLabel[fixture.status]}
+					{STATUS_LABELS[fixture.status]}
 				</span>
 			</CardHeader>
 			<CardContent>

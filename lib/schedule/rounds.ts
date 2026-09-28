@@ -1,5 +1,4 @@
 import type { Fixture } from '@/app/generated/prisma/client';
-import { prisma } from '@/lib/prisma';
 
 export type Round = {
 	round: number;
@@ -7,15 +6,6 @@ export type Round = {
 };
 
 export type RoundState = 'finished' | 'current' | 'upcoming' | 'pending';
-
-export async function getSeasonFixtures(season: number) {
-	const schedule = await prisma.fixture.findMany({
-		where: { season },
-		orderBy: [{ kickoff: 'asc' }],
-	});
-
-	return schedule;
-}
 
 export function groupFixturesByRound(fixtures: Fixture[]) {
 	const fixturesByRound = new Map<number, Fixture[]>();

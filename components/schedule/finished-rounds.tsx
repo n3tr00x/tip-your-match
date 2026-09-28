@@ -5,7 +5,7 @@ import {
 	AccordionContent,
 } from '@/components/ui/accordion';
 import { RoundItem } from '@/components/schedule/round-item';
-import { type Round } from '@/lib/schedule';
+import { type Round } from '@/lib/schedule/rounds';
 
 export type FinishedRoundsProps = {
 	finishedRounds: Round[];
@@ -28,7 +28,6 @@ export function FinishedRounds({ finishedRounds }: FinishedRoundsProps) {
 							<RoundItem key={round.round} round={round} state="finished" />
 						))}
 					</Accordion>
-					{/* <RoundAccordion rounds={finishedRounds} currentRound={currentRound} /> */}
 				</AccordionContent>
 			</AccordionItem>
 		</Accordion>
