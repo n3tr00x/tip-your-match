@@ -12,7 +12,8 @@
 		"prisma:generate": "prisma generate",
 		"prisma:reset": "prisma migrate reset",
 		"prisma:migrate": "prisma migrate dev",
-		"prisma:studio": "tsx scripts/studio.ts"
+		"prisma:studio": "tsx scripts/studio.ts",
+		"sync:fixtures": "tsx scripts/sync-fixtures.ts"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.8.0",
