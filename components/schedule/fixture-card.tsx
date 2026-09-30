@@ -1,19 +1,12 @@
-import type { Fixture, FixtureStatus } from '@/app/generated/prisma/client';
+import type { Fixture } from '@/app/generated/prisma/client';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { TeamRow } from '@/components/schedule/team-row';
 import { getMatchOutcome, MatchOutcome } from '@/lib/match-outcome';
 import { formatMatchDate } from '@/lib/date';
+import { STATUS_LABELS } from '@/lib/fixture-status';
 
 type FixtureCardProps = {
 	fixture: Fixture;
-};
-
-const STATUS_LABELS: Record<FixtureStatus, string> = {
-	SCHEDULED: 'Zaplanowany',
-	LIVE: 'Na żywo',
-	FINISHED: 'Zakończony',
-	POSTPONED: 'Przełożony',
-	CANCELLED: 'Odwołany',
 };
 
 const getTeamVariant = (
