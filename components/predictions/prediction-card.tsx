@@ -16,6 +16,15 @@ import {
 import { cn } from '@/lib/utils';
 import { TeamInfo } from '@/components/team-info';
 import { Button } from '@/components/ui/button';
+import { useActionState } from 'react';
+import {
+	savePrediction,
+	type PredictionFormState,
+} from '@/lib/actions/predictions';
+import {
+	errorPredictionToast,
+	successPredictionToast,
+} from '@/lib/toasts/predictions';
 
 type PredictionCardProps = {
 	fixture: Fixture;
@@ -26,7 +35,7 @@ type PredictionCardProps = {
 type ScoreInputProps = {
 	name: 'homeScore' | 'awayScore';
 	team: string;
-	defaultValue?: number;
+	defaultValue?: number | string;
 };
 
 function ScoreInput({ name, team, defaultValue }: ScoreInputProps) {
@@ -46,10 +55,8 @@ function ScoreInput({ name, team, defaultValue }: ScoreInputProps) {
 	);
 }
 
-function PredictionStatus({
-	prediction,
-}: Pick<PredictionCardProps, 'prediction'>) {
-	if (!prediction) {
+function PredictionStatus({ isSaved }: { isSaved: boolean }) {
+	if (!isSaved) {
 		return <span className="text-muted-foreground">Brak typu</span>;
 	}
 
@@ -110,7 +117,29 @@ export function PredictionCard({
 	isOpen,
 	prediction,
 }: PredictionCardProps) {
+	const [state, formAction, isPending] = useActionState(
+		async (previousState: PredictionFormState, formData: FormData) => {
+			const result = await savePrediction(previousState, formData);
+
+			if (result.success && result.values) {
+				successPredictionToast(
+					fixture.homeTeam,
+					fixture.awayTeam,
+					result.values,
+				);
+			}
+
+			if (!result.success && result.errors) {
+				errorPredictionToast(result.errors);
+			}
+
+			return result;
+		},
+		{ success: false },
+	);
+
 	const { date, time } = formatMatchDate(fixture.kickoff);
+	const isSaved = Boolean(prediction) || state.success;
 
 	return (
 		<Card
@@ -120,7 +149,7 @@ export function PredictionCard({
 				'border-border': !isOpen,
 			})}
 		>
-			<form className="flex flex-col gap-(--card-spacing)">
+			<form action={formAction} className="flex flex-col gap-(--card-spacing)">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle className="text-muted-foreground tracking-widest text-[0.625rem] uppercase">
 						{date} · {time}
@@ -132,14 +161,14 @@ export function PredictionCard({
 
 				<input type="hidden" name="fixtureId" value={fixture.id} />
 
-				<fieldset disabled={!isOpen} className="contents">
+				<fieldset disabled={!isOpen || isPending} className="contents">
 					<CardContent className="flex flex-col gap-y-4">
 						<div className="flex justify-between items-center gap-4">
 							<TeamInfo name={fixture.homeTeam} logo={fixture.homeTeamLogo} />
 							<ScoreInput
 								name="homeScore"
 								team={fixture.homeTeam}
-								defaultValue={prediction?.homeScore}
+								defaultValue={state.values?.homeScore ?? prediction?.homeScore}
 							/>
 						</div>
 						<div className="flex justify-between items-center gap-4">
@@ -147,15 +176,15 @@ export function PredictionCard({
 							<ScoreInput
 								name="awayScore"
 								team={fixture.awayTeam}
-								defaultValue={prediction?.awayScore}
+								defaultValue={state.values?.awayScore ?? prediction?.awayScore}
 							/>
 						</div>
 					</CardContent>
 					<CardFooter className="justify-between gap-4 text-[0.625rem] uppercase tracking-widest">
-						<PredictionStatus prediction={prediction} />
+						<PredictionStatus isSaved={isSaved} />
 						{isOpen ? (
 							<Button type="submit" size="sm">
-								{prediction ? 'Zmień typ' : 'Zapisz'}
+								{isPending ? 'Zapisywanie…' : isSaved ? 'Zmień typ' : 'Zapisz'}
 							</Button>
 						) : (
 							<MatchScore fixture={fixture} />
