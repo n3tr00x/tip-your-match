@@ -21,7 +21,7 @@ export function formatDateRange(from: Date, to: Date) {
 	const start = dateFormatter.format(from);
 	const end = dateFormatter.format(to);
 
-	return start === end ? start : `${start}–${end}`;
+	return start === end ? start : `${start} – ${end}`;
 }
 
 export function formatMatchDate(input: Date | string | number) {
