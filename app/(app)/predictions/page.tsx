@@ -1,4 +1,3 @@
-import { connection } from 'next/server';
 import { requireSession } from '@/lib/session';
 import { getSeasonFixtures } from '@/lib/schedule/queries';
 import { requireEnvVariable } from '@/lib/utils';
@@ -7,7 +6,6 @@ import { PredictionSection } from '@/components/predictions/prediction-section';
 import { getUserPredictions } from '@/lib/predictions/queries';
 
 export default async function PredictionsPage() {
-	await connection();
 	const season = requireEnvVariable('FOOTBALL_API_SEASON');
 	const now = new Date();
 
@@ -15,10 +13,10 @@ export default async function PredictionsPage() {
 	const userId = session.user.id;
 
 	const fixtures = await getSeasonFixtures(Number(season));
-	const { round, overdue } = getPredictableFixtures(fixtures, now);
+	const { round, rescheduled } = getPredictableFixtures(fixtures, now);
 
 	const combinedFixturesIds = [
-		...overdue.map(f => f.id),
+		...rescheduled.map(f => f.id),
 		...(round?.fixtures.map(f => f.id) ?? []),
 	];
 
@@ -26,11 +24,13 @@ export default async function PredictionsPage() {
 
 	return (
 		<div className="max-w-7xl mx-auto space-y-8 my-6">
-			{!round && overdue.length === 0 && <p>Brak meczów do wytypowania.</p>}
-			{overdue.length > 0 && (
+			{!round && rescheduled.length === 0 && (
+				<p>Brak meczów do wytypowania.</p>
+			)}
+			{rescheduled.length > 0 && (
 				<PredictionSection
-					title="Zaległe mecze"
-					fixtures={overdue}
+					title="Mecze przeniesione"
+					fixtures={rescheduled}
 					predictions={predictions}
 					now={now}
 				/>
