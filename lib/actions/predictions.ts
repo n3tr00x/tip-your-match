@@ -1,17 +1,14 @@
 'use server';
 
 import { refresh } from 'next/cache';
-import { headers } from 'next/headers';
-import { redirect } from 'next/navigation';
 import * as z from 'zod';
-import { auth } from '@/lib/auth';
+
 import { prisma } from '@/lib/prisma';
 import { isFixtureOpenForPrediction } from '@/lib/predictions/rules';
+import { requireSession } from '@/lib/session';
 
 const SCORE_ERROR = 'Wynik musi być liczbą całkowitą od 0 do 20';
 
-// FormData returns '' for an empty input and z.coerce.number('') === 0,
-// so the empty string has to be rejected before coercion.
 const scoreSchema = z
 	.string(SCORE_ERROR)
 	.trim()
@@ -40,19 +37,13 @@ export async function savePrediction(
 	_previousState: PredictionFormState,
 	formData: FormData,
 ): Promise<PredictionFormState> {
-	const session = await auth.api.getSession({ headers: await headers() });
-
-	if (!session) {
-		redirect('/login');
-	}
+	const session = await requireSession();
 
 	const raw = {
 		fixtureId: formData.get('fixtureId'),
 		homeScore: formData.get('homeScore'),
 		awayScore: formData.get('awayScore'),
 	};
-	// React resets the form after the action, so on error the submitted
-	// values are sent back and used as the inputs' default values.
 	const values = {
 		homeScore: String(raw.homeScore ?? ''),
 		awayScore: String(raw.awayScore ?? ''),

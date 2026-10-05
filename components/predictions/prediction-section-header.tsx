@@ -1,25 +1,20 @@
-import { useId } from 'react';
 import { formatDateRange } from '@/lib/date';
-import { Fixture } from '@/app/generated/prisma/client';
+import type { Fixture } from '@/app/generated/prisma/client';
 import { isFixtureOpenForPrediction } from '@/lib/predictions/rules';
 
 type PredictionSectionHeaderProps = {
 	fixtures: Fixture[];
 	title: string;
 	now: Date;
-	// openCount: number;
-	// fixturesLength: number;
+	headingId: string;
 };
 
 export function PredictionSectionHeader({
 	fixtures,
 	title,
 	now,
-	// openCount,
-	// fixturesLength,
+	headingId,
 }: PredictionSectionHeaderProps) {
-	const headingId = useId();
-
 	const firstKickoff = fixtures[0].kickoff;
 	const lastKickoff = fixtures[fixtures.length - 1].kickoff;
 	const openCount = fixtures.filter(fixture =>

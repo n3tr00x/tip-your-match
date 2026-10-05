@@ -1,10 +1,13 @@
 'use client';
 
-import type { Fixture, Prediction } from '@/app/generated/prisma/client';
+import type { Fixture } from '@/app/generated/prisma/client';
 import { Input } from '@/components/ui/input';
 import { formatMatchDate } from '@/lib/date';
 import { STATUS_LABELS } from '@/lib/fixture-status';
-import { getPredictionDeadline } from '@/lib/predictions/rules';
+import {
+	getPredictionDeadline,
+	type PredictionScore,
+} from '@/lib/predictions/rules';
 import { CheckIcon, ClockIcon, LockIcon } from 'lucide-react';
 import {
 	Card,
@@ -29,7 +32,7 @@ import {
 type PredictionCardProps = {
 	fixture: Fixture;
 	isOpen: boolean;
-	prediction?: Pick<Prediction, 'homeScore' | 'awayScore'>;
+	prediction?: PredictionScore;
 };
 
 type ScoreInputProps = {
@@ -75,9 +78,6 @@ function MatchScore({ fixture }: Pick<PredictionCardProps, 'fixture'>) {
 
 	return (
 		<span className="flex items-center gap-2">
-			<span className="text-muted-foreground">
-				{fixture.status === 'LIVE' ? 'Na żywo' : 'Wynik'}
-			</span>
 			<span className="font-heading text-lg tabular-nums">
 				{fixture.homeScore}:{fixture.awayScore}
 			</span>
@@ -114,12 +114,30 @@ function LockStatus({
 
 export function PredictionCard({
 	fixture,
-	isOpen,
 	prediction,
+	isOpen,
 }: PredictionCardProps) {
 	const [state, formAction, isPending] = useActionState(
 		async (previousState: PredictionFormState, formData: FormData) => {
-			const result = await savePrediction(previousState, formData);
+			let result: PredictionFormState;
+
+			// The action handles its own errors, but the request itself can still
+			// fail (network loss, server restart). Without catching it here,
+			// useActionState would rethrow the error to the nearest error boundary.
+			try {
+				result = await savePrediction(previousState, formData);
+			} catch (error) {
+				console.error('Save prediction request failed', error);
+
+				result = {
+					success: false,
+					errors: ['Nie udało się połączyć z serwerem. Spróbuj ponownie.'],
+					values: {
+						homeScore: String(formData.get('homeScore') ?? ''),
+						awayScore: String(formData.get('awayScore') ?? ''),
+					},
+				};
+			}
 
 			if (result.success && result.values) {
 				successPredictionToast(
