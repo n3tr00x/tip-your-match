@@ -1,9 +1,7 @@
 import 'dotenv/config';
 
-import {
-	fetchSeasonFixtures,
-	mapMatchToFixtureData,
-} from '@/lib/football-api/client';
+import { fetchSeasonFixtures } from '@/lib/football-api/client';
+import { mapMatchToFixtureData } from '@/lib/football-api/mappers';
 import { prisma } from '@/lib/prisma';
 
 async function syncFixtures() {
