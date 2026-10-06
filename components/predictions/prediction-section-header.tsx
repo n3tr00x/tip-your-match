@@ -15,8 +15,12 @@ export function PredictionSectionHeader({
 	now,
 	headingId,
 }: PredictionSectionHeaderProps) {
-	const firstKickoff = fixtures[0].kickoff;
-	const lastKickoff = fixtures[fixtures.length - 1].kickoff;
+	// Postponed fixtures keep their old kickoff until a new date is set.
+	const datedFixtures = fixtures.filter(
+		fixture => fixture.status !== 'POSTPONED',
+	);
+	const firstKickoff = datedFixtures.at(0)?.kickoff;
+	const lastKickoff = datedFixtures.at(-1)?.kickoff;
 	const openCount = fixtures.filter(fixture =>
 		isFixtureOpenForPrediction(fixture, now),
 	).length;
@@ -30,9 +34,11 @@ export function PredictionSectionHeader({
 				{title}
 			</h2>
 			<div className="flex items-center gap-4 text-xs text-muted-foreground tabular-nums">
-				<span className="hidden sm:inline">
-					{formatDateRange(firstKickoff, lastKickoff)}
-				</span>
+				{firstKickoff && lastKickoff && (
+					<span className="hidden sm:inline">
+						{formatDateRange(firstKickoff, lastKickoff)}
+					</span>
+				)}
 				<span>
 					Otwarte: {openCount}/{fixtures.length}
 				</span>

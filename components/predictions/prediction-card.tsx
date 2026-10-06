@@ -170,7 +170,9 @@ export function PredictionCard({
 			<form action={formAction} className="flex flex-col gap-(--card-spacing)">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle className="text-muted-foreground tracking-widest text-[0.625rem] uppercase">
-						{date} · {time}
+						{fixture.status === 'POSTPONED'
+							? 'Termin do ustalenia'
+							: `${date} · ${time}`}
 					</CardTitle>
 					<span className="flex items-center gap-1 text-muted-foreground tracking-widest text-[0.625rem] uppercase">
 						<LockStatus fixture={fixture} isOpen={isOpen} />
