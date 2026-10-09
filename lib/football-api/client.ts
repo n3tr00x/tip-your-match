@@ -1,5 +1,3 @@
-import 'server-only';
-
 import { FootballDataMatchesResponse } from '@/lib/football-api/types';
 import { requireEnvVariable } from '@/lib/utils';
 

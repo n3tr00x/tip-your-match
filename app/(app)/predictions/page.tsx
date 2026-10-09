@@ -4,6 +4,7 @@ import { requireEnvVariable } from '@/lib/utils';
 import { getPredictableFixtures } from '@/lib/predictions/rounds';
 import { PredictionSection } from '@/components/predictions/prediction-section';
 import { getUserPredictions } from '@/lib/predictions/queries';
+import { resolveCurrentRound } from '@/lib/schedule/rounds';
 
 export default async function PredictionsPage() {
 	const season = requireEnvVariable('FOOTBALL_API_SEASON');
@@ -12,29 +13,37 @@ export default async function PredictionsPage() {
 	const session = await requireSession();
 	const userId = session.user.id;
 
-	const fixtures = await getSeasonFixtures(Number(season));
-	const { round, rescheduled, awaitingDate } = getPredictableFixtures(
-		fixtures,
-		now,
-	);
+	const { fixtures, currentMatchday } = await getSeasonFixtures(Number(season));
+	const currentRound = resolveCurrentRound(fixtures, currentMatchday, now);
+	const { round, delayed, broughtForward, awaitingDate } =
+		getPredictableFixtures(fixtures, currentRound, now);
 
 	const combinedFixturesIds = [
-		...rescheduled.map(f => f.id),
+		...delayed.map(f => f.id),
 		...(round?.fixtures.map(f => f.id) ?? []),
 		...awaitingDate.map(f => f.id),
+		...broughtForward.map(f => f.id),
 	];
 
 	const predictions = await getUserPredictions(userId, combinedFixturesIds);
 
 	return (
 		<div className="max-w-7xl mx-auto space-y-8 my-6">
-			{!round && rescheduled.length === 0 && awaitingDate.length === 0 && (
+			{!round && delayed.length === 0 && awaitingDate.length === 0 && (
 				<p>Brak meczów do wytypowania.</p>
 			)}
-			{rescheduled.length > 0 && (
+			{delayed.length > 0 && (
 				<PredictionSection
 					title="Mecze przeniesione"
-					fixtures={rescheduled}
+					fixtures={delayed}
+					predictions={predictions}
+					now={now}
+				/>
+			)}
+			{broughtForward.length > 0 && (
+				<PredictionSection
+					title="Mecze przyspieszone"
+					fixtures={broughtForward}
 					predictions={predictions}
 					now={now}
 				/>
