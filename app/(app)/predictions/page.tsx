@@ -13,37 +13,34 @@ export default async function PredictionsPage() {
 	const session = await requireSession();
 	const userId = session.user.id;
 
-	const { fixtures, currentMatchday } = await getSeasonFixtures(Number(season));
+	const { fixtures, currentMatchday } = await getSeasonFixtures(
+		Number(season),
+		now,
+	);
 	const currentRound = resolveCurrentRound(fixtures, currentMatchday, now);
-	const { round, delayed, broughtForward, awaitingDate } =
-		getPredictableFixtures(fixtures, currentRound, now);
+	const { round, moved, awaitingDate } = getPredictableFixtures(
+		fixtures,
+		currentRound,
+		now,
+	);
 
 	const combinedFixturesIds = [
-		...delayed.map(f => f.id),
+		...moved.map(f => f.id),
 		...(round?.fixtures.map(f => f.id) ?? []),
 		...awaitingDate.map(f => f.id),
-		...broughtForward.map(f => f.id),
 	];
 
 	const predictions = await getUserPredictions(userId, combinedFixturesIds);
 
 	return (
 		<div className="max-w-7xl mx-auto space-y-8 my-6">
-			{!round && delayed.length === 0 && awaitingDate.length === 0 && (
+			{!round && moved.length === 0 && awaitingDate.length === 0 && (
 				<p>Brak meczów do wytypowania.</p>
 			)}
-			{delayed.length > 0 && (
+			{moved.length > 0 && (
 				<PredictionSection
 					title="Mecze przeniesione"
-					fixtures={delayed}
-					predictions={predictions}
-					now={now}
-				/>
-			)}
-			{broughtForward.length > 0 && (
-				<PredictionSection
-					title="Mecze przyspieszone"
-					fixtures={broughtForward}
+					fixtures={moved}
 					predictions={predictions}
 					now={now}
 				/>
