@@ -22,6 +22,13 @@ export type FootballDataMatch = {
 		fullTime: { home: number | null; away: number | null };
 		halfTime: { home: number | null; away: number | null };
 	};
+	season: {
+		id: number;
+		startDate: string;
+		endDate: string;
+		currentMatchday: number;
+		winner: string | null;
+	};
 };
 
 export type FootballDataMatchesResponse = {

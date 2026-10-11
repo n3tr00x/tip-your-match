@@ -1,5 +1,5 @@
 import { FixtureStatus } from '@/app/generated/prisma/enums';
-import { FixtureCreateInput } from '@/app/generated/prisma/models';
+import { FixtureUncheckedCreateInput } from '@/app/generated/prisma/models';
 import {
 	FootballDataMatch,
 	FootballDataMatchStatus,
@@ -30,11 +30,11 @@ function mapStatus(status: FootballDataMatchStatus): FixtureStatus {
 
 export function mapMatchToFixtureData(
 	match: FootballDataMatch,
-	season: number,
-): FixtureCreateInput {
+	seasonId: string,
+): FixtureUncheckedCreateInput {
 	return {
 		apiId: match.id,
-		season: season,
+		seasonId: seasonId,
 		round: match.matchday,
 		kickoff: new Date(match.utcDate),
 		status: mapStatus(match.status),

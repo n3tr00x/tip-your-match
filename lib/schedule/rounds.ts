@@ -60,6 +60,18 @@ export function getCurrentRound(
 	return lastStartedRound;
 }
 
+export function resolveCurrentRound(
+	fixtures: Fixture[],
+	currentMatchday: number | undefined,
+	now = new Date(),
+) {
+	const isKnownRound =
+		currentMatchday !== undefined &&
+		fixtures.some(fixture => fixture.round === currentMatchday);
+
+	return isKnownRound ? currentMatchday : getCurrentRound(fixtures, now);
+}
+
 export function isRoundCompleted(round: Round) {
 	return round.fixtures.every(
 		fixture => fixture.status === 'FINISHED' || fixture.status === 'CANCELLED',
