@@ -101,6 +101,4 @@ export async function syncFixtures() {
 		},
 		{ timeout: 60_000 },
 	);
-
-	console.log(`Zsynchronizowano ${syncedFixtures.length} meczów.`);
 }
