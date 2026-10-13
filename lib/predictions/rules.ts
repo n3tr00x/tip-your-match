@@ -4,6 +4,11 @@ const PREDICTION_LOCK_MINUTES = 5;
 
 export type PredictionScore = Pick<Prediction, 'homeScore' | 'awayScore'>;
 
+export type UserPrediction = Pick<
+	Prediction,
+	'homeScore' | 'awayScore' | 'points'
+>;
+
 export function getPredictionDeadline(kickoff: Date) {
 	return new Date(kickoff.getTime() - 60 * PREDICTION_LOCK_MINUTES * 1000);
 }
