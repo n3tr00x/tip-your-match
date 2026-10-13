@@ -5,7 +5,10 @@ import { useActionState } from 'react';
 import type { Fixture } from '@/app/generated/prisma/client';
 import { LockStatus } from '@/components/predictions/lock-status';
 import { ScoreInput } from '@/components/predictions/score-input';
-import { getResultVariant } from '@/components/predictions/prediction-result';
+import {
+	getResultVariant,
+	type PointsValue,
+} from '@/components/predictions/prediction-result';
 import { PredictionStatus } from '@/components/predictions/prediction-status';
 import { MatchScore } from '@/components/predictions/match-score';
 import { TeamInfo } from '@/components/team-info';
@@ -83,7 +86,7 @@ export function PredictionCard({
 	const isSaved = Boolean(prediction) || state.success;
 	const resultVariant =
 		fixture.status === 'FINISHED'
-			? getResultVariant(prediction?.points ?? null)
+			? getResultVariant((prediction?.points as PointsValue) ?? null)
 			: undefined;
 
 	return (

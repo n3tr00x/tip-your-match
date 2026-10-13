@@ -21,7 +21,7 @@ type ResultVariant = {
 	cardClassName: string;
 };
 
-type PointsValue = (typeof POINTS)[keyof typeof POINTS];
+export type PointsValue = (typeof POINTS)[keyof typeof POINTS];
 
 const RESULT_VARIANTS: Record<PointsValue, ResultVariant> = {
 	[POINTS.EXACT]: {
