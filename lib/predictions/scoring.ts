@@ -29,7 +29,7 @@ export function sumScoredPoints(points: (number | null | undefined)[]) {
 	const scored = points.filter((value): value is number => value != null);
 
 	if (scored.length === 0) {
-		return 0;
+		return null;
 	}
 
 	return scored.reduce((sum, value) => sum + value, 0);

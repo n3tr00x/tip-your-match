@@ -21,7 +21,9 @@ type ResultVariant = {
 	cardClassName: string;
 };
 
-const RESULT_VARIANTS: Record<string, ResultVariant> = {
+type PointsValue = (typeof POINTS)[keyof typeof POINTS];
+
+const RESULT_VARIANTS: Record<PointsValue, ResultVariant> = {
 	[POINTS.EXACT]: {
 		label: 'Dokładny wynik',
 		icon: CircleCheckBigIcon,
@@ -42,7 +44,7 @@ const RESULT_VARIANTS: Record<string, ResultVariant> = {
 	},
 };
 
-export const getResultVariant = (points: number | null) => {
+export const getResultVariant = (points: PointsValue | null) => {
 	return points === null ? undefined : RESULT_VARIANTS[points];
 };
 
@@ -55,7 +57,7 @@ export function PredictionResult({ isSaved, points }: PredictionResultProps) {
 		return <span className="text-muted-foreground">Brak typu · 0</span>;
 	}
 
-	const variant = getResultVariant(points);
+	const variant = getResultVariant(points as PointsValue);
 
 	if (points === null || !variant) {
 		return (

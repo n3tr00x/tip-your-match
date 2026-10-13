@@ -1,6 +1,6 @@
 import type { FixtureStatus } from '@/app/generated/prisma/enums';
+import { PredictionResult } from '@/components/predictions/prediction-result';
 import { CheckIcon } from 'lucide-react';
-import { PredictionResult } from './prediction-result';
 
 type PredictionStatusProps = {
 	status: FixtureStatus;
