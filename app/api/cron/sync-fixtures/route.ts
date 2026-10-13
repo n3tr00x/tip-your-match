@@ -13,7 +13,9 @@ export async function GET(request: NextRequest) {
 
 	try {
 		const result = await syncFixtures();
-		console.log(`Fixtures synced: ${result.updated} of ${result.total}`);
+		console.log(
+			`Fixtures synced: ${result.updated} of ${result.total}. Scored predictions: ${result.scored}`,
+		);
 
 		return NextResponse.json(result);
 	} catch (error) {

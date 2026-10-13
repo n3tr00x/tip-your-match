@@ -1,14 +1,18 @@
 'use client';
 
+import { useActionState } from 'react';
+
 import type { Fixture } from '@/app/generated/prisma/client';
-import { Input } from '@/components/ui/input';
-import { formatMatchDate } from '@/lib/date';
-import { STATUS_LABELS } from '@/lib/fixture-status';
+import { LockStatus } from '@/components/predictions/lock-status';
+import { ScoreInput } from '@/components/predictions/score-input';
 import {
-	getPredictionDeadline,
-	type PredictionScore,
-} from '@/lib/predictions/rules';
-import { CheckIcon, ClockIcon, LockIcon } from 'lucide-react';
+	getResultVariant,
+	type PointsValue,
+} from '@/components/predictions/prediction-result';
+import { PredictionStatus } from '@/components/predictions/prediction-status';
+import { MatchScore } from '@/components/predictions/match-score';
+import { TeamInfo } from '@/components/team-info';
+import { Button } from '@/components/ui/button';
 import {
 	Card,
 	CardContent,
@@ -16,101 +20,23 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { TeamInfo } from '@/components/team-info';
-import { Button } from '@/components/ui/button';
-import { useActionState } from 'react';
 import {
 	savePrediction,
 	type PredictionFormState,
 } from '@/lib/actions/predictions';
+import { formatMatchDate } from '@/lib/date';
+import { type UserPrediction } from '@/lib/predictions/rules';
 import {
 	errorPredictionToast,
 	successPredictionToast,
 } from '@/lib/toasts/predictions';
+import { cn } from '@/lib/utils';
 
-type PredictionCardProps = {
+export type PredictionCardProps = {
 	fixture: Fixture;
 	isOpen: boolean;
-	prediction?: PredictionScore;
+	prediction?: UserPrediction;
 };
-
-type ScoreInputProps = {
-	name: 'homeScore' | 'awayScore';
-	team: string;
-	defaultValue?: number | string;
-};
-
-function ScoreInput({ name, team, defaultValue }: ScoreInputProps) {
-	return (
-		<Input
-			aria-label={`Gole: ${team}`}
-			type="number"
-			name={name}
-			inputMode="numeric"
-			defaultValue={defaultValue}
-			placeholder="-"
-			min={0}
-			max={20}
-			required
-			className="w-12 shrink-0 text-center font-heading text-lg tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-		/>
-	);
-}
-
-function PredictionStatus({ isSaved }: { isSaved: boolean }) {
-	if (!isSaved) {
-		return <span className="text-muted-foreground">Brak typu</span>;
-	}
-
-	return (
-		<span className="flex items-center gap-1 text-primary">
-			<CheckIcon className="size-3" />
-			Typ zapisany
-		</span>
-	);
-}
-
-function MatchScore({ fixture }: Pick<PredictionCardProps, 'fixture'>) {
-	if (fixture.homeScore === null || fixture.awayScore === null) {
-		return null;
-	}
-
-	return (
-		<span className="flex items-center gap-2">
-			<span className="font-heading text-lg tabular-nums">
-				{fixture.homeScore}:{fixture.awayScore}
-			</span>
-		</span>
-	);
-}
-
-function LockStatus({
-	fixture,
-	isOpen,
-}: Pick<PredictionCardProps, 'fixture' | 'isOpen'>) {
-	if (isOpen) {
-		const { time } = formatMatchDate(getPredictionDeadline(fixture.kickoff));
-
-		return (
-			<>
-				<ClockIcon className="size-3" />
-				Do {time}
-			</>
-		);
-	}
-
-	if (fixture.status === 'SCHEDULED') {
-		return (
-			<>
-				<LockIcon className="size-3" />
-				Zamknięte
-			</>
-		);
-	}
-
-	return STATUS_LABELS[fixture.status];
-}
 
 export function PredictionCard({
 	fixture,
@@ -158,14 +84,21 @@ export function PredictionCard({
 
 	const { date, time } = formatMatchDate(fixture.kickoff);
 	const isSaved = Boolean(prediction) || state.success;
+	const resultVariant =
+		fixture.status === 'FINISHED'
+			? getResultVariant((prediction?.points as PointsValue) ?? null)
+			: undefined;
 
 	return (
 		<Card
 			size="sm"
-			className={cn('ring-0 border-2 shadow', {
-				'border-primary/75': isOpen,
-				'border-border': !isOpen,
-			})}
+			className={cn(
+				'ring-0 border-2 shadow',
+				resultVariant?.cardClassName ?? {
+					'border-primary/75': isOpen,
+					'border-border': !isOpen,
+				},
+			)}
 		>
 			<form action={formAction} className="flex flex-col gap-(--card-spacing)">
 				<CardHeader className="flex justify-between items-center">
@@ -201,7 +134,11 @@ export function PredictionCard({
 						</div>
 					</CardContent>
 					<CardFooter className="justify-between gap-4 text-[0.625rem] uppercase tracking-widest">
-						<PredictionStatus isSaved={isSaved} />
+						<PredictionStatus
+							status={fixture.status}
+							points={prediction?.points ?? null}
+							isSaved={isSaved}
+						/>
 						{isOpen ? (
 							<Button type="submit" size="sm">
 								{isPending ? 'Zapisywanie…' : isSaved ? 'Zmień typ' : 'Zapisz'}

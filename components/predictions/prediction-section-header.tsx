@@ -7,6 +7,7 @@ type PredictionSectionHeaderProps = {
 	title: string;
 	now: Date;
 	headingId: string;
+	totalPoints: number | null;
 };
 
 export function PredictionSectionHeader({
@@ -14,6 +15,7 @@ export function PredictionSectionHeader({
 	title,
 	now,
 	headingId,
+	totalPoints,
 }: PredictionSectionHeaderProps) {
 	// Postponed fixtures keep their old kickoff until a new date is set.
 	const datedFixtures = fixtures.filter(
@@ -37,6 +39,12 @@ export function PredictionSectionHeader({
 				{firstKickoff && lastKickoff && (
 					<span className="hidden sm:inline">
 						{formatDateRange(firstKickoff, lastKickoff)}
+					</span>
+				)}
+				{totalPoints !== null && (
+					<span>
+						Punkty:{' '}
+						<span className="font-semibold text-foreground">{totalPoints}</span>
 					</span>
 				)}
 				<span>

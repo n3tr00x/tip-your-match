@@ -3,6 +3,7 @@ import { prisma } from '@/lib/prisma';
 import { requireEnvVariable } from '@/lib/utils';
 import { fetchSeasonFixtures } from '@/lib/football-api/client';
 import { mapMatchToFixtureData } from '@/lib/football-api/mappers';
+import { syncPredictionPoints } from '@/lib/predictions/score-fixtures';
 
 type ExistingFixture = Pick<
 	FixtureUncheckedCreateInput,
@@ -86,17 +87,40 @@ export async function syncFixtures() {
 					return !existing || hasFixtureChanged(existing, fixture);
 				});
 
+			const changedFixtureIds: string[] = [];
+
 			for (const fixture of changedFixtures) {
-				await tx.fixture.upsert({
+				const result = await tx.fixture.upsert({
 					where: { apiId: fixture.apiId },
 					create: fixture,
 					update: fixture,
+					select: { id: true },
 				});
+				changedFixtureIds.push(result.id);
 			}
+
+			const pendingFixtures = await tx.fixture.findMany({
+				where: {
+					seasonId: season.id,
+					status: 'FINISHED',
+					predictions: { some: { points: null } },
+				},
+				select: { id: true },
+			});
+
+			const fixtureIdsToScore = [
+				...new Set([
+					...changedFixtureIds,
+					...pendingFixtures.map(fixture => fixture.id),
+				]),
+			];
+
+			const scored = await syncPredictionPoints(tx, fixtureIdsToScore);
 
 			return {
 				total: matches.length,
 				updated: changedFixtures.length,
+				scored,
 			};
 		},
 		{ timeout: 60_000 },

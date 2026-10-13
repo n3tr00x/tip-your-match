@@ -5,7 +5,7 @@ import { syncFixtures } from '@/lib/football-api/sync-fixtures';
 syncFixtures()
 	.then(syncedFixtures => {
 		console.log(
-			`Zsynchronizowano ${syncedFixtures.updated} z ${syncedFixtures.total} meczów.`,
+			`Zsynchronizowano ${syncedFixtures.updated} z ${syncedFixtures.total} meczów. Rozliczono ${syncedFixtures.scored} typów.`,
 		);
 	})
 	.catch(error => {
