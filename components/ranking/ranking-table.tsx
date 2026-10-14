@@ -1,10 +1,6 @@
 'use client';
 
-import { useTable } from '@tanstack/react-table';
-import { rankingColumns } from '@/components/ranking/ranking-columns';
-import { rankingFeatures } from '@/components/ranking/ranking-features';
-
-import type { RankingEntry } from '@/lib/ranking/queries';
+import { useTable, type SortDirection } from '@tanstack/react-table';
 import {
 	Table,
 	TableBody,
@@ -12,13 +8,22 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from '../ui/table';
+} from '@/components/ui/table';
+import { rankingColumns } from '@/components/ranking/ranking-columns';
+import { rankingFeatures } from '@/components/ranking/ranking-features';
+import { SortIndicator } from '@/components/ranking/sort-indicator';
 import { cn } from '@/lib/utils';
+import type { RankingEntry } from '@/lib/ranking/queries';
 
 type RankingTableProps = {
 	data: RankingEntry[];
 	currentUserId: string;
 };
+
+const ARIA_SORT = {
+	asc: 'ascending',
+	desc: 'descending',
+} as const satisfies Record<SortDirection, string>;
 
 export function RankingTable({ data, currentUserId }: RankingTableProps) {
 	const table = useTable({
@@ -26,6 +31,8 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 		columns: rankingColumns,
 		data,
 		getRowId: row => row.userId,
+		initialState: { sorting: [{ id: 'position', desc: false }] },
+		enableSortingRemoval: true,
 	});
 
 	return (
@@ -33,16 +40,28 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 			<TableHeader>
 				{table.getHeaderGroups().map(headerGroup => (
 					<TableRow key={headerGroup.id}>
-						{headerGroup.headers.map(header => (
-							<TableHead
-								key={header.id}
-								className={header.column.columnDef.meta?.className}
-							>
-								{header.isPlaceholder ? null : (
-									<table.FlexRender header={header} />
-								)}
-							</TableHead>
-						))}
+						{headerGroup.headers.map(header => {
+							const direction = header.column.getIsSorted();
+
+							return (
+								<TableHead
+									key={header.id}
+									className={header.column.columnDef.meta?.className}
+									aria-sort={direction ? ARIA_SORT[direction] : undefined}
+								>
+									{header.isPlaceholder ? null : (
+										<button
+											type="button"
+											onClick={header.column.getToggleSortingHandler()}
+											className="inline-flex items-center gap-1 hover:text-foreground"
+										>
+											<table.FlexRender header={header} />
+											<SortIndicator direction={direction} />
+										</button>
+									)}
+								</TableHead>
+							);
+						})}
 					</TableRow>
 				))}
 			</TableHeader>
