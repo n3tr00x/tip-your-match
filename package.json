@@ -15,6 +15,7 @@
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:studio": "tsx scripts/studio.ts",
 		"sync:fixtures": "tsx scripts/sync-fixtures.ts",
+		"seed:ranking": "tsx scripts/seed-ranking.ts",
 		"vercel-build": "if [ \"$VERCEL_ENV\" = \"production\" ]; then prisma migrate deploy; fi && next build"
 	},
 	"dependencies": {
