@@ -1,9 +1,31 @@
+import { RankingTable } from '@/components/ranking/ranking-table';
 import { getRanking } from '@/lib/ranking/queries';
+import { requireSession } from '@/lib/session';
 import { requireEnvVariable } from '@/lib/utils';
 
+const formatSeason = (year: number) => `${year}/${year + 1}`;
+
 export default async function RankingPage() {
+	const session = await requireSession();
 	const seasonYear = Number(requireEnvVariable('FOOTBALL_API_SEASON'));
 	const ranking = await getRanking(seasonYear);
 
-	return <pre>{JSON.stringify(ranking, null, 2)}</pre>;
+	return (
+		<div className="max-w-7xl mx-auto my-6 space-y-6">
+			<header className="flex items-center justify-between gap-4 border-b pb-2">
+				<h1 className="font-heading uppercase tracking-widest">
+					Ranking {formatSeason(seasonYear)}
+				</h1>
+				<span className="text-xs text-muted-foreground tabular-nums">
+					Sezon {formatSeason(seasonYear)}
+				</span>
+			</header>
+
+			{ranking.length === 0 ? (
+				<p>Ranking pojawi się po rozliczeniu pierwszych meczów</p>
+			) : (
+				<RankingTable data={ranking} currentUserId={session.user.id} />
+			)}
+		</div>
+	);
 }
