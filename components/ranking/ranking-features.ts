@@ -1,4 +1,6 @@
 import {
+	columnFilteringFeature,
+	createFilteredRowModel,
 	createSortedRowModel,
 	metaHelper,
 	rowSortingFeature,
@@ -11,6 +13,8 @@ type RankingColumnMeta = {
 
 export const rankingFeatures = tableFeatures({
 	columnMeta: metaHelper<RankingColumnMeta>(),
+	columnFilteringFeature,
 	rowSortingFeature,
+	filteredRowModel: createFilteredRowModel(),
 	sortedRowModel: createSortedRowModel(),
 });

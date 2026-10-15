@@ -1,4 +1,8 @@
-import { createColumnHelper } from '@tanstack/react-table';
+import {
+	constructFilterFn,
+	createColumnHelper,
+	filterFn_includesString,
+} from '@tanstack/react-table';
 
 import { rankingFeatures } from '@/components/ranking/ranking-features';
 import type { RankingEntry } from '@/lib/ranking/queries';
@@ -12,6 +16,20 @@ const averageFormatter = new Intl.NumberFormat('pl-PL', {
 const NUMERIC = 'text-right tabular-nums';
 const NUMERIC_DESKTOP = `${NUMERIC} hidden sm:table-cell`;
 
+function normalizeName(value: unknown) {
+	return String(value ?? '')
+		.toLocaleLowerCase('pl')
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+		.replace(/ł/g, 'l');
+}
+
+const includesNameIgnoringCaseAndDiacritics = constructFilterFn({
+	...filterFn_includesString,
+	resolveFilterValue: normalizeName,
+	resolveDataValue: normalizeName,
+});
+
 export const rankingColumns = columnHelper.columns([
 	columnHelper.accessor('position', {
 		header: '#',
@@ -22,6 +40,7 @@ export const rankingColumns = columnHelper.columns([
 		header: 'Gracz',
 		sortFn: (rowA, rowB) =>
 			nameCollator.compare(rowA.original.name, rowB.original.name),
+		filterFn: includesNameIgnoringCaseAndDiacritics,
 	}),
 	columnHelper.accessor('rounds', {
 		header: 'Kolejki',
