@@ -1,6 +1,7 @@
 'use client';
 
 import { useTable, type SortDirection } from '@tanstack/react-table';
+import { Input } from '@/components/ui/input';
 import {
 	Table,
 	TableBody,
@@ -11,15 +12,17 @@ import {
 } from '@/components/ui/table';
 import { rankingColumns } from '@/components/ranking/ranking-columns';
 import { rankingFeatures } from '@/components/ranking/ranking-features';
+import { RankingPagination } from '@/components/ranking/ranking-pagination';
 import { SortIndicator } from '@/components/ranking/sort-indicator';
 import { cn } from '@/lib/utils';
 import type { RankingEntry } from '@/lib/ranking/queries';
-import { Input } from '../ui/input';
 
 type RankingTableProps = {
 	data: RankingEntry[];
 	currentUserId: string;
 };
+
+const PAGE_SIZE = 20;
 
 const ARIA_SORT = {
 	asc: 'ascending',
@@ -32,8 +35,11 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 		columns: rankingColumns,
 		data,
 		getRowId: row => row.userId,
-		initialState: { sorting: [{ id: 'position', desc: false }] },
-		enableSortingRemoval: true,
+		initialState: {
+			sorting: [{ id: 'position', desc: false }],
+			pagination: { pageIndex: 0, pageSize: PAGE_SIZE },
+		},
+		enableSortingRemoval: false,
 	});
 
 	const nameColumn = table.getColumn('name');
@@ -112,6 +118,14 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 					)}
 				</TableBody>
 			</Table>
+			<RankingPagination
+				pageIndex={table.state.pagination.pageIndex}
+				pageCount={table.getPageCount()}
+				canPreviousPage={table.getCanPreviousPage()}
+				canNextPage={table.getCanNextPage()}
+				onPreviousPage={table.previousPage}
+				onNextPage={table.nextPage}
+			/>
 		</div>
 	);
 }
