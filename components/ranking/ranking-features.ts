@@ -9,11 +9,16 @@ import {
 	tableFeatures,
 } from '@tanstack/react-table';
 
+type RankingTableMeta = {
+	currentUserId: string;
+};
+
 type RankingColumnMeta = {
 	className?: string;
 };
 
 export const rankingFeatures = tableFeatures({
+	tableMeta: metaHelper<RankingTableMeta>(),
 	columnMeta: metaHelper<RankingColumnMeta>(),
 	columnFilteringFeature,
 	rowSortingFeature,

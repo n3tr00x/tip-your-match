@@ -1,6 +1,7 @@
 'use client';
 
 import { useTable, type SortDirection } from '@tanstack/react-table';
+import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
 	Table,
@@ -15,7 +16,7 @@ import { rankingFeatures } from '@/components/ranking/ranking-features';
 import { RankingPagination } from '@/components/ranking/ranking-pagination';
 import { SortIndicator } from '@/components/ranking/sort-indicator';
 import { cn } from '@/lib/utils';
-import type { RankingEntry } from '@/lib/ranking/queries';
+import type { RankingEntry } from '@/lib/ranking/types';
 
 type RankingTableProps = {
 	data: RankingEntry[];
@@ -39,6 +40,9 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 			sorting: [{ id: 'position', desc: false }],
 			pagination: { pageIndex: 0, pageSize: PAGE_SIZE },
 		},
+		meta: {
+			currentUserId,
+		},
 		enableSortingRemoval: false,
 	});
 
@@ -46,19 +50,37 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 	const filterValue = nameColumn?.getFilterValue();
 	const search = typeof filterValue === 'string' ? filterValue : '';
 	const rows = table.getRowModel().rows;
+	const { pageIndex, pageSize } = table.state.pagination;
+	const currentUserIndex = table
+		.getPrePaginatedRowModel()
+		.rows.findIndex(row => row.original.userId === currentUserId);
+	const currentUserPageIndex =
+		currentUserIndex !== -1 ? Math.floor(currentUserIndex / pageSize) : null;
 
 	return (
 		<div className="space-y-4">
-			<Input
-				aria-label="Szukaj gracza"
-				type="search"
-				value={search}
-				onChange={event => nameColumn?.setFilterValue(event.target.value)}
-				placeholder="Szukaj gracza..."
-				className="max-w-xs"
-			/>
+			<div className="flex flex-wrap items-center justify-between gap-2">
+				<Input
+					aria-label="Szukaj gracza"
+					type="search"
+					value={search}
+					onChange={event => nameColumn?.setFilterValue(event.target.value)}
+					placeholder="Szukaj gracza..."
+					className="max-w-xs"
+				/>
+				{currentUserPageIndex !== null && table.getPageCount() > 1 && (
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={() => table.setPageIndex(currentUserPageIndex)}
+						disabled={currentUserPageIndex === pageIndex}
+					>
+						Pokaż moją pozycję
+					</Button>
+				)}
+			</div>
 
-			<Table>
+			<Table aria-label="Ranking graczy">
 				<TableHeader>
 					{table.getHeaderGroups().map(headerGroup => (
 						<TableRow key={headerGroup.id}>
@@ -119,7 +141,7 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 				</TableBody>
 			</Table>
 			<RankingPagination
-				pageIndex={table.state.pagination.pageIndex}
+				pageIndex={pageIndex}
 				pageCount={table.getPageCount()}
 				canPreviousPage={table.getCanPreviousPage()}
 				canNextPage={table.getCanNextPage()}

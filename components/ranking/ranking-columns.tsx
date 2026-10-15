@@ -5,7 +5,8 @@ import {
 } from '@tanstack/react-table';
 
 import { rankingFeatures } from '@/components/ranking/ranking-features';
-import type { RankingEntry } from '@/lib/ranking/queries';
+import type { RankingEntry } from '@/lib/ranking/types';
+import { cn } from '@/lib/utils';
 
 const columnHelper = createColumnHelper<typeof rankingFeatures, RankingEntry>();
 const nameCollator = new Intl.Collator('pl');
@@ -41,6 +42,21 @@ export const rankingColumns = columnHelper.columns([
 		sortFn: (rowA, rowB) =>
 			nameCollator.compare(rowA.original.name, rowB.original.name),
 		filterFn: includesNameIgnoringCaseAndDiacritics,
+		cell: info => {
+			const isCurrentUser =
+				info.row.original.userId === info.table.options.meta?.currentUserId;
+
+			return (
+				<span className={cn({ 'font-semibold': isCurrentUser })}>
+					{info.getValue()}
+					{isCurrentUser && (
+						<span className="ml-1.5 text-xs font-normal text-primary">
+							(Ty)
+						</span>
+					)}
+				</span>
+			);
+		},
 	}),
 	columnHelper.accessor('rounds', {
 		header: 'Kolejki',

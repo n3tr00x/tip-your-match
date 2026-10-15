@@ -1,16 +1,8 @@
+import 'server-only';
+
 import { prisma } from '@/lib/prisma';
 import { POINTS } from '@/lib/predictions/scoring';
-
-export type RankingEntry = {
-	userId: string;
-	name: string;
-	rounds: number;
-	predictions: number;
-	averagePerRound: number;
-	exactHits: number;
-	points: number;
-	position: number;
-};
+import type { RankingEntry } from '@/lib/ranking/types';
 
 type RankingRow = Omit<RankingEntry, 'averagePerRound'>;
 
