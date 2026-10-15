@@ -16,13 +16,12 @@ export default async function RankingPage() {
 				<h1 className="font-heading uppercase tracking-widest">
 					Ranking {formatSeason(seasonYear)}
 				</h1>
-				<span className="text-xs text-muted-foreground tabular-nums">
-					Sezon {formatSeason(seasonYear)}
-				</span>
 			</header>
 
 			{ranking.length === 0 ? (
-				<p>Ranking pojawi się po rozliczeniu pierwszych meczów</p>
+				<p className="text-muted-foreground">
+					Ranking pojawi się po rozliczeniu pierwszych meczów
+				</p>
 			) : (
 				<RankingTable data={ranking} currentUserId={session.user.id} />
 			)}
