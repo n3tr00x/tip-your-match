@@ -100,6 +100,7 @@ model Season {
   endDate         DateTime
   currentMatchday Int
   fixtures        Fixture[]
+  leagues         League[]
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
 
@@ -112,10 +113,13 @@ model League {
   code      String         @unique
   adminId   String
   admin     User           @relation("LeagueAdmin", fields: [adminId], references: [id], onDelete: Restrict)
+  seasonId  String
+  season    Season         @relation(fields: [seasonId], references: [id], onDelete: Restrict)
   members   LeagueMember[]
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
 
+  @@index([adminId, seasonId])
   @@map("league")
 }
 
@@ -125,6 +129,8 @@ model LeagueMember {
   league   League @relation(fields: [leagueId], references: [id], onDelete: Cascade)
   userId   String
   user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  joinedAt DateTime @default(now())
+  joinedRound Int
 
   @@unique([leagueId, userId])
   @@index([userId])

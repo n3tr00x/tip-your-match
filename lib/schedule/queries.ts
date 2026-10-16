@@ -9,12 +9,13 @@ export async function getSeasonFixtures(seasonYear: number, now = new Date()) {
 	});
 
 	if (!season) {
-		return { fixtures: [], currentMatchday: undefined };
+		return { seasonId: undefined, fixtures: [], currentMatchday: undefined };
 	}
 
 	const age = now.getTime() - season.updatedAt.getTime();
 
 	return {
+		seasonId: season.id,
 		fixtures: season.fixtures,
 		currentMatchday: age > MAX_AGE_MS ? undefined : season.currentMatchday,
 	};
