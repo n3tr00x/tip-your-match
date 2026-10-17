@@ -21,6 +21,16 @@ export async function getCurrentSeasonRound(now = new Date()) {
 	return { seasonId, round };
 }
 
+export async function getCurrentSeasonId() {
+	const seasonYear = Number(requireEnvVariable('FOOTBALL_API_SEASON'));
+	const season = await prisma.season.findUnique({
+		where: { year: seasonYear },
+		select: { id: true },
+	});
+
+	return season?.id ?? null;
+}
+
 export async function countCreatedLeagues(userId: string, seasonId: string) {
 	return prisma.league.count({ where: { adminId: userId, seasonId } });
 }
