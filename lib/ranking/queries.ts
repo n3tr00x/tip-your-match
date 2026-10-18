@@ -45,11 +45,11 @@ export async function getLeagueRanking(
 	const rows = await prisma.$queryRaw<RankingRow[]>`
     SELECT 
       u.id AS "userId",
-      u.name
+      u.name,
       COUNT(DISTINCT scored.round)::int AS rounds,
       COUNT(scored.id)::int as predictions,
       COUNT(scored.id) FILTER (WHERE scored.points = ${POINTS.EXACT})::int AS "exactHits",
-      COALESCE(SUM(scored.points), 0)::int AS points
+      COALESCE(SUM(scored.points), 0)::int AS points,
       RANK() OVER (
         ORDER BY COALESCE(SUM(scored.points), 0) DESC,
                  COUNT(scored.id) FILTER (WHERE scored.points = ${POINTS.EXACT}) DESC

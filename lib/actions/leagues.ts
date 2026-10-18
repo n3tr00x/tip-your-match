@@ -6,7 +6,7 @@ import { Prisma } from '@/app/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
 import { generateLeagueCode, normalizeLeagueCode } from '@/lib/leagues/code';
-import { LEAGUE_LIMITS } from '@/lib/leagues/rules';
+import { CODE_LENGTH, LEAGUE_LIMITS } from '@/lib/leagues/rules';
 import {
 	countCreatedLeagues,
 	getCurrentSeasonRound,
@@ -27,7 +27,7 @@ const leagueNameSchema = z
 const leagueCodeSchema = z
 	.string('Podaj kod ligi')
 	.transform(normalizeLeagueCode)
-	.pipe(z.string().length(8, 'Kod ligi składa się z 8 znaków'));
+	.pipe(z.string().length(CODE_LENGTH, `Kod ligi składa się z ${CODE_LENGTH} znaków`));
 
 const leagueIdSchema = z
 	.string('Nieprawidłowa liga')

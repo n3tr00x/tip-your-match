@@ -1,7 +1,5 @@
 import { randomInt } from 'node:crypto';
-
-const CODE_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789';
-const CODE_LENGTH = 6;
+import { CODE_ALPHABET, CODE_LENGTH } from '@/lib/leagues/rules';
 
 export function generateLeagueCode() {
 	return Array.from(

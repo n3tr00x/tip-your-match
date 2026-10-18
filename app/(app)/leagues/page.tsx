@@ -13,6 +13,8 @@ export default async function LeaguesPage() {
 	const userId = session.user.id;
 	const seasonId = await getCurrentSeasonId();
 
+	console.log({ userId, seasonId });
+
 	if (!seasonId) {
 		return (
 			<p className="max-w-7xl mx-auto my-6 text-muted-foreground">
@@ -25,6 +27,8 @@ export default async function LeaguesPage() {
 		getUserLeagues(userId, seasonId),
 		countCreatedLeagues(userId, seasonId),
 	]);
+
+	console.log({ userLeagues, createdLeaguesCount });
 
 	return (
 		<div className="max-w-7xl mx-auto my-6 space-y-8">
