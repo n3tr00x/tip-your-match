@@ -16,7 +16,7 @@
 		"prisma:studio": "tsx scripts/studio.ts",
 		"sync:fixtures": "tsx scripts/sync-fixtures.ts",
 		"seed:ranking": "tsx scripts/seed-ranking.ts",
-		"vercel-build": "if [ \"$VERCEL_ENV\" = \"production\" ]; then prisma migrate deploy; fi && next build"
+		"vercel-build": "prisma generate && if [ \"$VERCEL_ENV\" = \"production\" ]; then prisma migrate deploy; fi && next build"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.8.0",

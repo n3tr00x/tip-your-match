@@ -1,0 +1,5 @@
+export const LEAGUE_LIMITS = { MAX_CREATED: 5, MAX_MEMBERS: 50 } as const;
+
+export const CODE_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ23456789';
+
+export const CODE_LENGTH = 6;
