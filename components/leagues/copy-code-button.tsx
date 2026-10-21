@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { errorCopyCodeToast, successCopyCodeToast } from '@/lib/toasts/leagues';
-import { Button } from '../ui/button';
 import { CheckIcon, CopyIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { errorCopyCodeToast, successCopyCodeToast } from '@/lib/toasts/leagues';
 
 const COPIED_RESET_MS = 2000;
 

@@ -3,7 +3,7 @@ import { toast } from '@/components/ui/toast';
 export function successCopyCodeToast(code: string) {
 	return toast.add({
 		type: 'success',
-		title: `Skopionowano kod ligi`,
+		title: `Skopiowano kod ligi`,
 		description: code,
 	});
 }

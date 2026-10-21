@@ -1,7 +1,7 @@
+import { Badge } from '@/components/ui/badge';
 import { LEAGUE_LIMITS } from '@/lib/leagues/rules';
-import { LeagueMemberEntry } from '@/lib/leagues/types';
-import { cn } from 'cn';
-import { Badge } from '../ui/badge';
+import type { LeagueMemberEntry } from '@/lib/leagues/types';
+import { cn } from '@/lib/utils';
 
 type LeagueMembersProps = {
 	members: LeagueMemberEntry[];
@@ -42,7 +42,7 @@ export function LeagueMembers({ members, currentUserId }: LeagueMembersProps) {
 								)}
 							</span>
 							<span className="text-xs text-muted-foreground tabular-nums">
-								{member.joinedRound}
+								od kolejki {member.joinedRound}
 							</span>
 						</li>
 					);

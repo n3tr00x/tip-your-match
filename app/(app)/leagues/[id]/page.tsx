@@ -1,10 +1,11 @@
 import { notFound } from 'next/navigation';
 
+import { Badge } from '@/components/ui/badge';
 import { CopyCodeButton } from '@/components/leagues/copy-code-button';
 import { LeagueMembers } from '@/components/leagues/league-members';
-import { LeaveLeagueDialog } from '@/components/leagues/league-dialog';
+import { LeaveLeagueDialog } from '@/components/leagues/leave-league-dialog';
 import { RankingTable } from '@/components/ranking/ranking-table';
-import { getLeagueForMember } from '@/lib/leagues/queries';
+import { getCurrentSeasonId, getLeagueForMember } from '@/lib/leagues/queries';
 import { getLeagueRanking } from '@/lib/ranking/queries';
 import { requireSession } from '@/lib/session';
 
@@ -20,7 +21,12 @@ export default async function LeaguePage({
 		notFound();
 	}
 
-	const ranking = await getLeagueRanking(league.id);
+	const [ranking, currentSeasonId] = await Promise.all([
+		getLeagueRanking(league.id),
+		getCurrentSeasonId(),
+	]);
+
+	const isArchived = league.seasonId !== currentSeasonId;
 
 	return (
 		<div className="max-w-7xl mx-auto my-6 space-y-8">
@@ -28,15 +34,19 @@ export default async function LeaguePage({
 				<h1 className="font-heading uppercase tracking-widest">
 					{league.name}
 				</h1>
-				<div className="flex items-center gap-2">
-					<span className="text-xs uppercase tracking-widest text-muted-foreground">
-						Kod
-					</span>
-					<code className="font-mono tracking-widest select-all">
-						{league.code}
-					</code>
-					<CopyCodeButton code={league.code} />
-				</div>
+				{isArchived ? (
+					<Badge>Sezon zakończony</Badge>
+				) : (
+					<div className="flex items-center gap-2">
+						<span className="text-xs uppercase tracking-widest text-muted-foreground">
+							Kod
+						</span>
+						<code className="font-mono tracking-widest select-all">
+							{league.code}
+						</code>
+						<CopyCodeButton code={league.code} />
+					</div>
+				)}
 			</header>
 
 			<section aria-labelledby="league-ranking" className="space-y-4">

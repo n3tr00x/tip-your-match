@@ -12,9 +12,9 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { LeagueFormState, leaveLeague } from '@/lib/actions/leagues';
-import { Button } from '../ui/button';
-import { FormErrors } from './form-errors';
+import { Button } from '@/components/ui/button';
+import { FormErrors } from '@/components/leagues/form-errors';
+import { type LeagueFormState, leaveLeague } from '@/lib/actions/leagues';
 
 type LeaveLeagueDialogProps = {
 	leagueId: string;
