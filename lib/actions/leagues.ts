@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import * as z from 'zod';
-import { type Prisma } from '@/app/generated/prisma/client';
+import { Prisma } from '@/app/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
 import { generateLeagueCode, normalizeLeagueCode } from '@/lib/leagues/code';
