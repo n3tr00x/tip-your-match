@@ -2,7 +2,7 @@
 
 import { redirect } from 'next/navigation';
 import * as z from 'zod';
-import { Prisma } from '@/app/generated/prisma/client';
+import { type Prisma } from '@/app/generated/prisma/client';
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
 import { generateLeagueCode, normalizeLeagueCode } from '@/lib/leagues/code';
@@ -27,7 +27,11 @@ const leagueNameSchema = z
 const leagueCodeSchema = z
 	.string('Podaj kod ligi')
 	.transform(normalizeLeagueCode)
-	.pipe(z.string().length(CODE_LENGTH, `Kod ligi składa się z ${CODE_LENGTH} znaków`));
+	.pipe(
+		z
+			.string()
+			.length(CODE_LENGTH, `Kod ligi składa się z ${CODE_LENGTH} znaków`),
+	);
 
 const leagueIdSchema = z
 	.string('Nieprawidłowa liga')
