@@ -5,6 +5,12 @@ const weekdayFormatter = new Intl.DateTimeFormat('pl-PL', {
 	timeZone: TIME_ZONE,
 });
 
+const monthFormatter = new Intl.DateTimeFormat('pl-PL', {
+	month: 'long',
+	year: 'numeric',
+	timeZone: TIME_ZONE,
+});
+
 const dateFormatter = new Intl.DateTimeFormat('pl-PL', {
 	day: '2-digit',
 	month: '2-digit',
@@ -34,4 +40,8 @@ export function formatMatchDate(input: Date | string | number) {
 		date: `${weekday} ${day}`,
 		time,
 	};
+}
+
+export function formatMonthYear(input: Date | string | number) {
+	return monthFormatter.format(new Date(input));
 }

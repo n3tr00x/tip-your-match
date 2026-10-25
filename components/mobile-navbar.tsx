@@ -13,7 +13,7 @@ export function MobileNavbar() {
 			aria-label="Główna nawigacja"
 			className="fixed inset-x-0 bottom-0 z-40 border-t bg-background/60 pb-[env(safe-area-inset-bottom)] backdrop-blur-xl backdrop-saturate-150 md:hidden"
 		>
-			<ul className="grid grid-cols-4">
+			<ul className="grid grid-cols-5">
 				{navLinks.map(({ href, label, icon: Icon }) => {
 					const isActive = isLinkActive(pathname, href);
 
