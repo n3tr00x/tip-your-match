@@ -16,7 +16,11 @@ export default function ProfileLoading() {
 					<Skeleton className="h-3 w-52" />
 				</div>
 			</div>
-			<Skeleton className="h-80 w-full" />
+			<div className="grid grid-cols-2 gap-4">
+				<Skeleton className="h-20" />
+				<Skeleton className="h-20" />
+			</div>
+			<Skeleton className="h-32 w-full" />
 		</LoadingRegion>
 	);
 }

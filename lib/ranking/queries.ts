@@ -2,7 +2,7 @@ import 'server-only';
 
 import { prisma } from '@/lib/prisma';
 import { POINTS } from '@/lib/predictions/scoring';
-import type { RankingEntry } from '@/lib/ranking/types';
+import type { RankingEntry, RankingStanding } from '@/lib/ranking/types';
 
 type RankingRow = Omit<RankingEntry, 'averagePerRound'>;
 
@@ -72,4 +72,22 @@ export async function getLeagueRanking(
 	`;
 
 	return toRankingEntries(rows);
+}
+
+export async function getUserStanding(
+	userId: string,
+	seasonYear: number,
+): Promise<RankingStanding | null> {
+	const ranking = await getRanking(seasonYear);
+	const entry = ranking.find(row => row.userId === userId);
+
+	if (!entry) {
+		return null;
+	}
+
+	return {
+		position: entry.position,
+		points: entry.points,
+		totalPlayers: ranking.length,
+	};
 }
