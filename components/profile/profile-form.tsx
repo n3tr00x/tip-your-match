@@ -13,17 +13,24 @@ import {
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { ProfileFormState, updateProfile } from '@/lib/actions/profile';
+import { updateProfile, type ProfileFormState } from '@/lib/actions/profile';
 import { successProfileToast } from '@/lib/toasts/profile';
 import { PROFILE_LIMITS } from '@/lib/profile/rules';
 
-type ProfileFormProps = { name: string; bio: string };
+type ProfileFormProps = {
+	name: string;
+	bio: string;
+	onCancel: () => void;
+	onSaved: () => void;
+};
 
 const initialState: ProfileFormState = { success: false };
 
 export function ProfileForm({
 	name: savedName,
 	bio: savedBio,
+	onCancel,
+	onSaved,
 }: ProfileFormProps) {
 	const [name, setName] = useState(savedName);
 	const [bio, setBio] = useState(savedBio);
@@ -33,6 +40,7 @@ export function ProfileForm({
 
 			if (result.success) {
 				successProfileToast();
+				onSaved();
 			}
 
 			return result;
@@ -63,6 +71,7 @@ export function ProfileForm({
 							minLength={PROFILE_LIMITS.NAME_MIN}
 							maxLength={PROFILE_LIMITS.NAME_MAX}
 							autoComplete="nickname"
+							autoFocus
 							required
 							onChange={event => setName(event.target.value)}
 						/>
@@ -92,9 +101,17 @@ export function ProfileForm({
 					<FormErrors id={errorsId} errors={state?.errors} />
 				</CardContent>
 
-				<CardFooter>
+				<CardFooter className="gap-2">
 					<Button type="submit" disabled={isPending}>
 						{isPending ? 'Zapisywanie...' : 'Zapisz zmiany'}
+					</Button>
+					<Button
+						type="button"
+						variant="ghost"
+						onClick={onCancel}
+						disabled={isPending}
+					>
+						Anuluj
 					</Button>
 				</CardFooter>
 			</form>
