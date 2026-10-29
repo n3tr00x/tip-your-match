@@ -45,7 +45,7 @@ export function ProfileStats({ standing }: ProfileStatsProps) {
 				</div>
 			</dl>
 			<Link
-				href="/predictions"
+				href="/ranking"
 				className="text-xs text-primary underline-offset-4 hover:underline"
 			>
 				Zobacz pełny ranking

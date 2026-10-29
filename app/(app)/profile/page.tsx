@@ -1,4 +1,3 @@
-import { ProfileForm } from '@/components/profile/profile-form';
 import { ProfileDetails } from '@/components/profile/profile-details';
 import { ProfileSummary } from '@/components/profile/profile-summary';
 import { ProfileStats } from '@/components/profile/profile-stats';
