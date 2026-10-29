@@ -1,4 +1,5 @@
 import 'server-only';
+import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
 import { getSeasonFixtures } from '@/lib/schedule/queries';
 import { resolveCurrentRound } from '@/lib/schedule/rounds';
@@ -57,7 +58,8 @@ export async function getUserLeagues(
 	}));
 }
 
-export async function getLeagueForMember(
+// Cached per request: the league page and its generateMetadata both read it
+export const getLeagueForMember = cache(async function getLeagueForMember(
 	leagueId: string,
 	userId: string,
 ): Promise<LeagueDetails | null> {
@@ -96,4 +98,4 @@ export async function getLeagueForMember(
 			isAdmin: user.id === adminId,
 		})),
 	};
-}
+});

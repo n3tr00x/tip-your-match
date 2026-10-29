@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { requireSession } from '@/lib/session';
 import { getSeasonFixtures } from '@/lib/schedule/queries';
 import { requireEnvVariable } from '@/lib/utils';
@@ -5,6 +6,8 @@ import { getPredictableFixtures } from '@/lib/predictions/rounds';
 import { PredictionSection } from '@/components/predictions/prediction-section';
 import { getUserPredictions } from '@/lib/predictions/queries';
 import { resolveCurrentRound } from '@/lib/schedule/rounds';
+
+export const metadata: Metadata = { title: 'Typy' };
 
 export default async function PredictionsPage() {
 	const season = requireEnvVariable('FOOTBALL_API_SEASON');

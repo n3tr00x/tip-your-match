@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { ProfileDetails } from '@/components/profile/profile-details';
 import { ProfileSummary } from '@/components/profile/profile-summary';
 import { ProfileStats } from '@/components/profile/profile-stats';
 import { getUserStanding } from '@/lib/ranking/queries';
 import { requireSession } from '@/lib/session';
 import { requireEnvVariable } from '@/lib/utils';
+
+export const metadata: Metadata = { title: 'Profil' };
 
 export default async function ProfilePage() {
 	const session = await requireSession();
