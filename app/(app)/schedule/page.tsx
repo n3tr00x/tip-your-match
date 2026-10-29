@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { FinishedRounds } from '@/components/schedule/finished-rounds';
 import { RoundAccordion } from '@/components/schedule/round-accordion';
 import { getSeasonFixtures } from '@/lib/schedule/queries';
@@ -8,6 +9,8 @@ import {
 } from '@/lib/schedule/rounds';
 import { requireEnvVariable } from '@/lib/utils';
 import { connection } from 'next/server';
+
+export const metadata: Metadata = { title: 'Terminarz' };
 
 export default async function SchedulePage() {
 	await connection();

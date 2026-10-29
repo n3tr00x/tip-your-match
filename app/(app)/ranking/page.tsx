@@ -1,9 +1,12 @@
+import type { Metadata } from 'next';
 import { RankingTable } from '@/components/ranking/ranking-table';
 import { getRanking } from '@/lib/ranking/queries';
 import { requireSession } from '@/lib/session';
 import { requireEnvVariable } from '@/lib/utils';
 
 const formatSeason = (year: number) => `${year}/${year + 1}`;
+
+export const metadata: Metadata = { title: 'Ranking' };
 
 export default async function RankingPage() {
 	const session = await requireSession();

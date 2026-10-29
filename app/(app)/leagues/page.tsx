@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { CreateLeagueForm } from '@/components/leagues/create-league-form';
 import { JoinLeagueForm } from '@/components/leagues/join-league-form';
 import { LeagueCard } from '@/components/leagues/league-card';
@@ -7,6 +8,8 @@ import {
 	getUserLeagues,
 } from '@/lib/leagues/queries';
 import { requireSession } from '@/lib/session';
+
+export const metadata: Metadata = { title: 'Ligi' };
 
 export default async function LeaguesPage() {
 	const session = await requireSession();

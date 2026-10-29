@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 
 import { Badge } from '@/components/ui/badge';
@@ -8,6 +9,16 @@ import { RankingTable } from '@/components/ranking/ranking-table';
 import { getCurrentSeasonId, getLeagueForMember } from '@/lib/leagues/queries';
 import { getLeagueRanking } from '@/lib/ranking/queries';
 import { requireSession } from '@/lib/session';
+
+export async function generateMetadata({
+	params,
+}: PageProps<'/leagues/[id]'>): Promise<Metadata> {
+	const { id } = await params;
+	const session = await requireSession();
+	const league = await getLeagueForMember(id, session.user.id);
+
+	return { title: league?.name ?? 'Nie znaleziono ligi' };
+}
 
 export default async function LeaguePage({
 	params,
