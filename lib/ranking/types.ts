@@ -8,3 +8,9 @@ export type RankingEntry = {
 	points: number;
 	position: number;
 };
+
+export type RankingStanding = {
+	position: number;
+	points: number;
+	totalPlayers: number;
+};

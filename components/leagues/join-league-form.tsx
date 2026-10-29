@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FormErrors } from '@/components/leagues/form-errors';
+import { FormErrors } from '@/components/form-errors';
 
 const initialState: LeagueFormState = { success: false };
 

@@ -13,7 +13,7 @@ import { Label } from '@/components/ui/label';
 import { createLeague, type LeagueFormState } from '@/lib/actions/leagues';
 import { LEAGUE_LIMITS } from '@/lib/leagues/rules';
 import { Input } from '../ui/input';
-import { FormErrors } from './form-errors';
+import { FormErrors } from '../form-errors';
 import { Button } from '../ui/button';
 
 type CreateLeagueFormProps = {

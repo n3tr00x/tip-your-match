@@ -13,7 +13,7 @@ import {
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { FormErrors } from '@/components/leagues/form-errors';
+import { FormErrors } from '@/components/form-errors';
 import { type LeagueFormState, leaveLeague } from '@/lib/actions/leagues';
 
 type LeaveLeagueDialogProps = {
