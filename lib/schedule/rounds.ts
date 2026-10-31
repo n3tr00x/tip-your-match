@@ -128,3 +128,9 @@ export function partitionRounds(rounds: Round[], currentRound?: number) {
 		finishedRounds,
 	};
 }
+
+export function getNextFixture(fixtures: Fixture[], now = new Date()) {
+	return fixtures.find(
+		fixture => fixture.status === 'SCHEDULED' && fixture.kickoff > now,
+	);
+}
