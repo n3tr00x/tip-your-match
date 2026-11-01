@@ -1,6 +1,10 @@
 import type { Fixture } from '@/app/generated/prisma/client';
 import { isFixtureOpenForPrediction } from '@/lib/predictions/rules';
-import { groupFixturesByRound, type Round } from '@/lib/schedule/rounds';
+import {
+	groupFixturesByRound,
+	isPlayable,
+	type Round,
+} from '@/lib/schedule/rounds';
 
 const DAY_IN_MS = 24 * 60 * 60 * 1000;
 const HORIZON_IN_MS = 7 * DAY_IN_MS;
@@ -14,10 +18,6 @@ export type PredictableFixtures = {
 
 function isAwaitingDate(fixture: Pick<Fixture, 'status'>) {
 	return fixture.status === 'POSTPONED';
-}
-
-function isPlayable(fixture: Pick<Fixture, 'status'>) {
-	return fixture.status !== 'POSTPONED' && fixture.status !== 'CANCELLED';
 }
 
 function getMedianKickoff(fixtures: Fixture[]) {
