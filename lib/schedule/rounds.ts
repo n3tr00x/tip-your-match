@@ -137,14 +137,11 @@ export function getNextFixture(fixtures: Fixture[], now = new Date()) {
 }
 
 export function getLastCompletedRound(fixtures: Fixture[]) {
-	const completedRounds = groupFixturesByRound(fixtures).filter(round => {
-		const playable = round.fixtures.filter(isPlayable);
-
-		return (
-			playable.length > 0 &&
-			playable.every(fixture => fixture.status === 'FINISHED')
-		);
-	});
+	const completedRounds = groupFixturesByRound(fixtures).filter(
+		round =>
+			isRoundCompleted(round) &&
+			round.fixtures.some(fixture => fixture.status === 'FINISHED'),
+	);
 
 	return completedRounds.at(-1)?.round;
 }
