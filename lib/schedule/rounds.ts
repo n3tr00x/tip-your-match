@@ -1,4 +1,5 @@
 import type { Fixture } from '@/app/generated/prisma/client';
+import { isFixtureOpenForPrediction } from '@/lib/predictions/rules';
 
 export type Round = {
 	round: number;
@@ -6,6 +7,10 @@ export type Round = {
 };
 
 export type RoundState = 'finished' | 'current' | 'upcoming' | 'pending';
+
+export function isPlayable(fixture: Pick<Fixture, 'status'>) {
+	return fixture.status !== 'POSTPONED' && fixture.status !== 'CANCELLED';
+}
 
 export function groupFixturesByRound(fixtures: Fixture[]) {
 	const fixturesByRound = new Map<number, Fixture[]>();
@@ -30,9 +35,7 @@ export function getCurrentRound(
 	fixtures: Fixture[],
 	now = new Date(),
 ): number | undefined {
-	const playable = fixtures.filter(
-		fixture => fixture.status !== 'POSTPONED' && fixture.status !== 'CANCELLED',
-	);
+	const playable = fixtures.filter(isPlayable);
 	const roundNumbers = playable.map(fixture => fixture.round);
 
 	if (roundNumbers.length === 0) {
@@ -127,4 +130,18 @@ export function partitionRounds(rounds: Round[], currentRound?: number) {
 		activeRounds,
 		finishedRounds,
 	};
+}
+
+export function getNextFixture(fixtures: Fixture[], now = new Date()) {
+	return fixtures.find(fixture => isFixtureOpenForPrediction(fixture, now));
+}
+
+export function getLastCompletedRound(fixtures: Fixture[]) {
+	const completedRounds = groupFixturesByRound(fixtures).filter(
+		round =>
+			isRoundCompleted(round) &&
+			round.fixtures.some(fixture => fixture.status === 'FINISHED'),
+	);
+
+	return completedRounds.at(-1)?.round;
 }

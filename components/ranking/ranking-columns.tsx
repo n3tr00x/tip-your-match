@@ -31,33 +31,40 @@ const includesNameIgnoringCaseAndDiacritics = constructFilterFn({
 	resolveDataValue: normalizeName,
 });
 
-export const rankingColumns = columnHelper.columns([
-	columnHelper.accessor('position', {
-		header: '#',
-		sortDescFirst: false,
-		meta: { className: 'w-12 tabular-nums' },
-	}),
-	columnHelper.accessor('name', {
-		header: 'Gracz',
-		sortFn: (rowA, rowB) =>
-			nameCollator.compare(rowA.original.name, rowB.original.name),
-		filterFn: includesNameIgnoringCaseAndDiacritics,
-		cell: info => {
-			const isCurrentUser =
-				info.row.original.userId === info.table.options.meta?.currentUserId;
+const positionColumn = columnHelper.accessor('position', {
+	header: '#',
+	sortDescFirst: false,
+	meta: { className: 'w-12 tabular-nums' },
+});
 
-			return (
-				<span className={cn({ 'font-semibold': isCurrentUser })}>
-					{info.getValue()}
-					{isCurrentUser && (
-						<span className="ml-1.5 text-xs font-normal text-primary">
-							(Ty)
-						</span>
-					)}
-				</span>
-			);
-		},
-	}),
+const nameColumn = columnHelper.accessor('name', {
+	header: 'Gracz',
+	sortFn: (rowA, rowB) =>
+		nameCollator.compare(rowA.original.name, rowB.original.name),
+	filterFn: includesNameIgnoringCaseAndDiacritics,
+	cell: info => {
+		const isCurrentUser =
+			info.row.original.userId === info.table.options.meta?.currentUserId;
+
+		return (
+			<span className={cn({ 'font-semibold': isCurrentUser })}>
+				{info.getValue()}
+				{isCurrentUser && (
+					<span className="ml-1.5 text-xs font-normal text-primary">(Ty)</span>
+				)}
+			</span>
+		);
+	},
+});
+
+const pointsColumn = columnHelper.accessor('points', {
+	header: 'Punkty',
+	meta: { className: `${NUMERIC} font-semibold` },
+});
+
+export const rankingColumns = columnHelper.columns([
+	positionColumn,
+	nameColumn,
 	columnHelper.accessor('rounds', {
 		header: 'Kolejki',
 		meta: { className: NUMERIC_DESKTOP },
@@ -75,8 +82,11 @@ export const rankingColumns = columnHelper.columns([
 		header: 'Dokładne',
 		meta: { className: NUMERIC },
 	}),
-	columnHelper.accessor('points', {
-		header: 'Punkty',
-		meta: { className: `${NUMERIC} font-semibold` },
-	}),
+	pointsColumn,
+]);
+
+export const roundRankingColumns = columnHelper.columns([
+	positionColumn,
+	nameColumn,
+	pointsColumn,
 ]);

@@ -11,7 +11,10 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import { rankingColumns } from '@/components/ranking/ranking-columns';
+import {
+	rankingColumns,
+	roundRankingColumns,
+} from '@/components/ranking/ranking-columns';
 import { rankingFeatures } from '@/components/ranking/ranking-features';
 import { RankingPagination } from '@/components/ranking/ranking-pagination';
 import { SortIndicator } from '@/components/ranking/sort-indicator';
@@ -21,6 +24,7 @@ import type { RankingEntry } from '@/lib/ranking/types';
 type RankingTableProps = {
 	data: RankingEntry[];
 	currentUserId: string;
+	variant?: 'season' | 'round';
 };
 
 const PAGE_SIZE = 20;
@@ -30,10 +34,15 @@ const ARIA_SORT = {
 	desc: 'descending',
 } as const satisfies Record<SortDirection, string>;
 
-export function RankingTable({ data, currentUserId }: RankingTableProps) {
+export function RankingTable({
+	data,
+	currentUserId,
+	variant = 'season',
+}: RankingTableProps) {
+	const columns = variant === 'round' ? roundRankingColumns : rankingColumns;
 	const table = useTable({
 		features: rankingFeatures,
-		columns: rankingColumns,
+		columns,
 		data,
 		getRowId: row => row.userId,
 		initialState: {
@@ -56,30 +65,37 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 		.rows.findIndex(row => row.original.userId === currentUserId);
 	const currentUserPageIndex =
 		currentUserIndex !== -1 ? Math.floor(currentUserIndex / pageSize) : null;
+	const isSearchable = variant === 'season';
+	const canShowCurrentUser =
+		currentUserPageIndex !== null && table.getPageCount() > 1;
 
 	return (
 		<div className="space-y-4">
-			<div className="flex flex-wrap items-center justify-between gap-2">
-				<Input
-					aria-label="Szukaj gracza"
-					type="search"
-					value={search}
-					onChange={event => nameColumn?.setFilterValue(event.target.value)}
-					placeholder="Szukaj gracza..."
-					className="max-w-xs"
-				/>
-				{currentUserPageIndex !== null && table.getPageCount() > 1 && (
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => table.setPageIndex(currentUserPageIndex)}
-						disabled={currentUserPageIndex === pageIndex}
-					>
-						Pokaż moją pozycję
-					</Button>
-				)}
-			</div>
-
+			{(isSearchable || canShowCurrentUser) && (
+				<div className="flex flex-wrap items-center justify-between gap-2">
+					{isSearchable && (
+						<Input
+							aria-label="Szukaj gracza"
+							type="search"
+							value={search}
+							onChange={event => nameColumn?.setFilterValue(event.target.value)}
+							placeholder="Szukaj gracza..."
+							className="max-w-xs"
+						/>
+					)}
+					{canShowCurrentUser && (
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => table.setPageIndex(currentUserPageIndex)}
+							disabled={currentUserPageIndex === pageIndex}
+							className="ml-auto"
+						>
+							Pokaż moją pozycję
+						</Button>
+					)}
+				</div>
+			)}
 			<Table aria-label="Ranking graczy">
 				<TableHeader>
 					{table.getHeaderGroups().map(headerGroup => (
@@ -113,7 +129,7 @@ export function RankingTable({ data, currentUserId }: RankingTableProps) {
 					{rows.length === 0 ? (
 						<TableRow>
 							<TableCell
-								colSpan={rankingColumns.length}
+								colSpan={columns.length}
 								className="py-8 text-center text-muted-foreground"
 							>
 								Nie znaleziono gracza &quot;{search}&quot;

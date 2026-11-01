@@ -1,11 +1,11 @@
 import type { RankingStanding } from '@/lib/ranking/types';
 import Link from 'next/link';
 
-type ProfileStatsProps = {
+type StandingStatsProps = {
 	standing: RankingStanding | null;
 };
 
-export function ProfileStats({ standing }: ProfileStatsProps) {
+export function StandingStats({ standing }: StandingStatsProps) {
 	if (!standing) {
 		return (
 			<p className="border-2 p-4 text-sm text-muted-foreground">

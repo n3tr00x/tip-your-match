@@ -13,7 +13,11 @@ function toRankingEntries(rows: RankingRow[]): RankingEntry[] {
 	}));
 }
 
-export async function getRanking(seasonYear: number): Promise<RankingEntry[]> {
+export async function getRanking(
+	seasonYear: number,
+	round?: number,
+): Promise<RankingEntry[]> {
+	const roundFilter = round ?? null;
 	const rows = await prisma.$queryRaw<RankingRow[]>`
 		SELECT
 			u.id AS "userId",
@@ -32,6 +36,7 @@ export async function getRanking(seasonYear: number): Promise<RankingEntry[]> {
 		JOIN "user" u ON u.id = p."userId"
 		WHERE p.points IS NOT NULL
 			AND s.year = ${seasonYear}
+			AND (${roundFilter}::int IS NULL OR f.round = ${roundFilter}::int)
 		GROUP BY u.id, u.name
 		ORDER BY position, u.name
 	`;
