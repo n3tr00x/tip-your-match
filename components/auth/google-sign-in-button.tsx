@@ -2,10 +2,11 @@
 
 import { useTransition } from 'react';
 
-import { Button } from '@/components/ui/button';
-import { GoogleIcon } from '@/components/ui/icons';
 import { signInWithSocialProvider } from '@/lib/actions/auth';
 import { errorFormFieldsToast } from '@/lib/toasts/auth';
+
+import { Button } from '@/components/ui/button';
+import { GoogleIcon } from '@/components/ui/icons';
 
 export function GoogleSignInButton() {
 	const [isPending, startTransition] = useTransition();

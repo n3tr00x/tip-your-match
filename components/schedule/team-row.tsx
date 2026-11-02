@@ -1,5 +1,6 @@
-import { TeamInfo } from '@/components/team-info';
 import { cn } from '@/lib/utils';
+
+import { TeamInfo } from '@/components/team-info';
 
 type TeamRowProps = {
 	name: string;
@@ -10,7 +11,7 @@ type TeamRowProps = {
 
 export function TeamRow({ name, logo, score, variant }: TeamRowProps) {
 	return (
-		<div className="flex justify-between items-center">
+		<div className="flex items-center justify-between">
 			<TeamInfo
 				name={name}
 				logo={logo}

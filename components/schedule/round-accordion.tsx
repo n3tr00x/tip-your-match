@@ -1,6 +1,8 @@
-import { RoundItem } from '@/components/schedule/round-item';
-import { Accordion } from '@/components/ui/accordion';
 import { getRoundState, type Round } from '@/lib/schedule/rounds';
+
+import { RoundItem } from '@/components/schedule/round-item';
+
+import { Accordion } from '@/components/ui/accordion';
 
 type RoundAccordionProps = {
 	rounds: Round[];
@@ -10,13 +12,9 @@ type RoundAccordionProps = {
 export function RoundAccordion({ rounds, currentRound }: RoundAccordionProps) {
 	return (
 		<Accordion defaultValue={currentRound ? [currentRound] : []}>
-			{rounds.map(round => {
+			{rounds.map((round) => {
 				return (
-					<RoundItem
-						key={round.round}
-						round={round}
-						state={getRoundState(round, currentRound)}
-					/>
+					<RoundItem key={round.round} round={round} state={getRoundState(round, currentRound)} />
 				);
 			})}
 		</Accordion>

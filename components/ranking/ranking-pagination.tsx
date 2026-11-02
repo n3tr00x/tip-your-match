@@ -22,10 +22,7 @@ export function RankingPagination({
 	}
 
 	return (
-		<nav
-			aria-label="Strony rankingu"
-			className="flex items-center justify-between gap-2"
-		>
+		<nav aria-label="Strony rankingu" className="flex items-center justify-between gap-2">
 			<span className="text-xs text-muted-foreground tabular-nums">
 				Strona {pageIndex + 1} z {pageCount}
 			</span>

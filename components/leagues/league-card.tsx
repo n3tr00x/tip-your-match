@@ -1,7 +1,10 @@
+import Link from 'next/link';
+
+import { ChevronRightIcon, UsersIcon } from 'lucide-react';
+
 import { LEAGUE_LIMITS } from '@/lib/leagues/rules';
 import { LeagueSummary } from '@/lib/leagues/types';
-import { ChevronRightIcon, UsersIcon } from 'lucide-react';
-import Link from 'next/link';
+
 import { Badge } from '../ui/badge';
 
 type LeagueCardProps = {
@@ -15,7 +18,7 @@ export function LeagueCard({ league }: LeagueCardProps) {
 			className="flex items-center justify-between gap-4 border-2 p-4 transition-colors hover:border-primary/75 focus-visible:border-primary focus-visible:outline-none"
 		>
 			<div className="space-y-1">
-				<p className="font-heading uppercase tracking-widest">{league.name}</p>
+				<p className="font-heading tracking-widest uppercase">{league.name}</p>
 				<p className="flex items-center gap-1 text-xs text-muted-foreground tabular-nums">
 					<UsersIcon aria-hidden className="size-3" />
 					{league.memberCount}/{LEAGUE_LIMITS.MAX_MEMBERS}

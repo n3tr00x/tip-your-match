@@ -1,10 +1,4 @@
-import {
-	CalendarDaysIcon,
-	TargetIcon,
-	TrophyIcon,
-	UserIcon,
-	UsersIcon,
-} from 'lucide-react';
+import { CalendarDaysIcon, TargetIcon, TrophyIcon, UserIcon, UsersIcon } from 'lucide-react';
 
 export const navLinks = [
 	{ href: '/predictions', label: 'Typuj', icon: TargetIcon },

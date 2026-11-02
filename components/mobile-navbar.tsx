@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
 import { isLinkActive, navLinks } from '@/lib/nav-links';
 import { cn } from '@/lib/utils';
 
@@ -23,10 +24,8 @@ export function MobileNavbar() {
 								href={href}
 								aria-current={isActive ? 'page' : undefined}
 								className={cn(
-									'flex h-14 flex-col items-center justify-center gap-1 text-[0.625rem] font-semibold uppercase tracking-widest transition-colors',
-									isActive
-										? 'text-primary'
-										: 'text-muted-foreground hover:text-foreground',
+									'flex h-14 flex-col items-center justify-center gap-1 text-[0.625rem] font-semibold tracking-widest uppercase transition-colors',
+									isActive ? 'text-primary' : 'text-muted-foreground hover:text-foreground',
 								)}
 							>
 								<Icon className="size-5" />

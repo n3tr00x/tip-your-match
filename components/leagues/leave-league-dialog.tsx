@@ -1,6 +1,11 @@
 'use client';
 
 import { useActionState, useId } from 'react';
+
+import { type LeagueFormState, leaveLeague } from '@/lib/actions/leagues';
+
+import { FormErrors } from '@/components/form-errors';
+
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -13,8 +18,6 @@ import {
 	AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
-import { FormErrors } from '@/components/form-errors';
-import { type LeagueFormState, leaveLeague } from '@/lib/actions/leagues';
 
 type LeaveLeagueDialogProps = {
 	leagueId: string;
@@ -37,15 +40,8 @@ const DIALOG_COPY = {
 	},
 };
 
-export function LeaveLeagueDialog({
-	leagueId,
-	leagueName,
-	isAdmin,
-}: LeaveLeagueDialogProps) {
-	const [state, formAction, isPending] = useActionState(
-		leaveLeague,
-		initialState,
-	);
+export function LeaveLeagueDialog({ leagueId, leagueName, isAdmin }: LeaveLeagueDialogProps) {
+	const [state, formAction, isPending] = useActionState(leaveLeague, initialState);
 	const errorsId = useId();
 	const copy = isAdmin ? DIALOG_COPY.admin : DIALOG_COPY.member;
 
@@ -62,14 +58,13 @@ export function LeaveLeagueDialog({
 						<AlertDialogDescription>
 							{isAdmin ? (
 								<>
-									Liga <strong>{leagueName}</strong> zostanie usunięta razem z
-									rankingiem dla wszystkich członków. Tej operacji nie da się
-									cofnąć.
+									Liga <strong>{leagueName}</strong> zostanie usunięta razem z rankingiem dla
+									wszystkich członków. Tej operacji nie da się cofnąć.
 								</>
 							) : (
 								<>
-									Możesz wrócić do ligi <strong>{leagueName}</strong> z jej
-									kodem, ale punkty będą liczone od nowa, od bieżącej kolejki.
+									Możesz wrócić do ligi <strong>{leagueName}</strong> z jej kodem, ale punkty będą
+									liczone od nowa, od bieżącej kolejki.
 								</>
 							)}
 						</AlertDialogDescription>
@@ -77,11 +72,7 @@ export function LeaveLeagueDialog({
 					<FormErrors id={errorsId} errors={state.errors} />
 					<AlertDialogFooter>
 						<AlertDialogCancel disabled={isPending}>Anuluj</AlertDialogCancel>
-						<AlertDialogAction
-							type="submit"
-							variant="destructive"
-							disabled={isPending}
-						>
+						<AlertDialogAction type="submit" variant="destructive" disabled={isPending}>
 							{isPending ? copy.pending : copy.trigger}
 						</AlertDialogAction>
 					</AlertDialogFooter>

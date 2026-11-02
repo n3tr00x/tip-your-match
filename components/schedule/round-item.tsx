@@ -1,20 +1,12 @@
-import {
-	AccordionContent,
-	AccordionItem,
-	AccordionTrigger,
-} from '@/components/ui/accordion';
-import { FixtureCard } from '@/components/schedule/fixture-card';
-import { RoundHeader } from '@/components/schedule/round-header';
 import type { Round, RoundState } from '@/lib/schedule/rounds';
 import { cn } from '@/lib/utils';
 
-export function RoundItem({
-	round,
-	state,
-}: {
-	round: Round;
-	state: RoundState;
-}) {
+import { FixtureCard } from '@/components/schedule/fixture-card';
+import { RoundHeader } from '@/components/schedule/round-header';
+
+import { AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+
+export function RoundItem({ round, state }: { round: Round; state: RoundState }) {
 	return (
 		<AccordionItem value={round.round}>
 			<AccordionTrigger
@@ -26,8 +18,8 @@ export function RoundItem({
 				<RoundHeader round={round} state={state} />
 			</AccordionTrigger>
 			<AccordionContent>
-				<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 my-4">
-					{round.fixtures.map(fixture => (
+				<div className="my-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+					{round.fixtures.map((fixture) => (
 						<FixtureCard key={fixture.id} fixture={fixture} />
 					))}
 				</div>

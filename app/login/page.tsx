@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+
 import { AuthContainer } from '@/components/auth/auth-container';
 import { LoginForm } from '@/components/auth/login-form';
 

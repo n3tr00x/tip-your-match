@@ -1,7 +1,8 @@
-import { Badge } from '@/components/ui/badge';
 import { LEAGUE_LIMITS } from '@/lib/leagues/rules';
 import type { LeagueMemberEntry } from '@/lib/leagues/types';
 import { cn } from '@/lib/utils';
+
+import { Badge } from '@/components/ui/badge';
 
 type LeagueMembersProps = {
 	members: LeagueMemberEntry[];
@@ -11,17 +12,14 @@ type LeagueMembersProps = {
 export function LeagueMembers({ members, currentUserId }: LeagueMembersProps) {
 	return (
 		<section aria-labelledby="league-members" className="space-y-4">
-			<h2
-				id="league-members"
-				className="font-heading uppercase tracking-widest text-sm"
-			>
+			<h2 id="league-members" className="font-heading text-sm tracking-widest uppercase">
 				Członkowie{' '}
 				<span className="text-muted-foreground tabular-nums">
 					({members.length}/{LEAGUE_LIMITS.MAX_MEMBERS})
 				</span>
 			</h2>
 			<ul className="divide-y border-2">
-				{members.map(member => {
+				{members.map((member) => {
 					const isCurrentUser = member.userId === currentUserId;
 
 					return (
@@ -34,12 +32,8 @@ export function LeagueMembers({ members, currentUserId }: LeagueMembersProps) {
 						>
 							<span className="flex items-center gap-2">
 								{member.name}
-								{isCurrentUser && (
-									<span className="text-xs text-muted-foreground">(Ty)</span>
-								)}
-								{member.isAdmin && (
-									<Badge className="text-primary">Admin</Badge>
-								)}
+								{isCurrentUser && <span className="text-xs text-muted-foreground">(Ty)</span>}
+								{member.isAdmin && <Badge className="text-primary">Admin</Badge>}
 							</span>
 							<span className="text-xs text-muted-foreground tabular-nums">
 								od kolejki {member.joinedRound}

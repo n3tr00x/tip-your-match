@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
-import { ProfileDetails } from '@/components/profile/profile-details';
-import { ProfileSummary } from '@/components/profile/profile-summary';
-import { StandingStats } from '@/components/ranking/standing-stats';
+
 import { getUserStanding } from '@/lib/ranking/queries';
 import { requireSession } from '@/lib/session';
 import { requireEnvVariable } from '@/lib/utils';
+
+import { ProfileDetails } from '@/components/profile/profile-details';
+import { ProfileSummary } from '@/components/profile/profile-summary';
+import { StandingStats } from '@/components/ranking/standing-stats';
 
 export const metadata: Metadata = { title: 'Profil' };
 
@@ -15,9 +17,9 @@ export default async function ProfilePage() {
 	const standing = await getUserStanding(id, seasonYear);
 
 	return (
-		<div className="max-w-2xl mx-auto my-6 space-y-6">
+		<div className="mx-auto my-6 max-w-2xl space-y-6">
 			<header className="border-b pb-2">
-				<h1 className="font-heading uppercase tracking-widest">Profil</h1>
+				<h1 className="font-heading tracking-widest uppercase">Profil</h1>
 			</header>
 			<ProfileSummary name={name} email={email} createdAt={createdAt} />
 			<StandingStats standing={standing} />

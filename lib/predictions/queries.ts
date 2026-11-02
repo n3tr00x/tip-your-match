@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma';
 import type { UserPrediction } from '@/lib/predictions/rules';
+import { prisma } from '@/lib/prisma';
 
 export async function getUserPredictions(
 	userId: string,

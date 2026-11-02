@@ -1,8 +1,10 @@
 'use server';
 
-import { APIError } from 'better-auth/api';
 import { headers } from 'next/headers';
+
+import { APIError } from 'better-auth/api';
 import * as z from 'zod';
+
 import { auth } from '../auth';
 
 const signUpSchema = z
@@ -11,7 +13,7 @@ const signUpSchema = z
 		password: z.string().min(8, 'Hasło musi mieć co najmniej 8 znaków'),
 		confirmPassword: z.string().min(8, 'Hasło musi mieć co najmniej 8 znaków'),
 	})
-	.refine(data => data.password === data.confirmPassword, {
+	.refine((data) => data.password === data.confirmPassword, {
 		message: 'Hasła muszą być takie same. Spróbuj ponownie.',
 		path: ['confirmPassword'],
 	});

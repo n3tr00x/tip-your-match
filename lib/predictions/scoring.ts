@@ -1,4 +1,5 @@
 import type { Fixture, Prediction } from '@/app/generated/prisma/client';
+
 import { getMatchOutcome } from '@/lib/match-outcome';
 
 export const POINTS = { EXACT: 3, OUTCOME: 1, MISS: 0 } as const;
@@ -11,10 +12,7 @@ export function calculatePoints(
 		return null;
 	}
 
-	if (
-		prediction.homeScore === result.homeScore &&
-		prediction.awayScore === result.awayScore
-	) {
+	if (prediction.homeScore === result.homeScore && prediction.awayScore === result.awayScore) {
 		return POINTS.EXACT;
 	}
 

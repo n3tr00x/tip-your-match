@@ -1,8 +1,10 @@
 import type { Metadata } from 'next';
-import { RankingTable } from '@/components/ranking/ranking-table';
+
 import { getRanking } from '@/lib/ranking/queries';
 import { requireSession } from '@/lib/session';
 import { requireEnvVariable } from '@/lib/utils';
+
+import { RankingTable } from '@/components/ranking/ranking-table';
 
 const formatSeason = (year: number) => `${year}/${year + 1}`;
 
@@ -14,17 +16,15 @@ export default async function RankingPage() {
 	const ranking = await getRanking(seasonYear);
 
 	return (
-		<div className="max-w-7xl mx-auto my-6 space-y-6">
+		<div className="mx-auto my-6 max-w-7xl space-y-6">
 			<header className="flex items-center justify-between gap-4 border-b pb-2">
-				<h1 className="font-heading uppercase tracking-widest">
+				<h1 className="font-heading tracking-widest uppercase">
 					Ranking {formatSeason(seasonYear)}
 				</h1>
 			</header>
 
 			{ranking.length === 0 ? (
-				<p className="text-muted-foreground">
-					Ranking pojawi się po rozliczeniu pierwszych meczów
-				</p>
+				<p className="text-muted-foreground">Ranking pojawi się po rozliczeniu pierwszych meczów</p>
 			) : (
 				<RankingTable data={ranking} currentUserId={session.user.id} />
 			)}

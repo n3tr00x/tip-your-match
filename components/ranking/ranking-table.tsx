@@ -1,6 +1,15 @@
 'use client';
 
-import { useTable, type SortDirection } from '@tanstack/react-table';
+import { type SortDirection, useTable } from '@tanstack/react-table';
+
+import type { RankingEntry } from '@/lib/ranking/types';
+import { cn } from '@/lib/utils';
+
+import { rankingColumns, roundRankingColumns } from '@/components/ranking/ranking-columns';
+import { rankingFeatures } from '@/components/ranking/ranking-features';
+import { RankingPagination } from '@/components/ranking/ranking-pagination';
+import { SortIndicator } from '@/components/ranking/sort-indicator';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -11,15 +20,6 @@ import {
 	TableHeader,
 	TableRow,
 } from '@/components/ui/table';
-import {
-	rankingColumns,
-	roundRankingColumns,
-} from '@/components/ranking/ranking-columns';
-import { rankingFeatures } from '@/components/ranking/ranking-features';
-import { RankingPagination } from '@/components/ranking/ranking-pagination';
-import { SortIndicator } from '@/components/ranking/sort-indicator';
-import { cn } from '@/lib/utils';
-import type { RankingEntry } from '@/lib/ranking/types';
 
 type RankingTableProps = {
 	data: RankingEntry[];
@@ -34,17 +34,13 @@ const ARIA_SORT = {
 	desc: 'descending',
 } as const satisfies Record<SortDirection, string>;
 
-export function RankingTable({
-	data,
-	currentUserId,
-	variant = 'season',
-}: RankingTableProps) {
+export function RankingTable({ data, currentUserId, variant = 'season' }: RankingTableProps) {
 	const columns = variant === 'round' ? roundRankingColumns : rankingColumns;
 	const table = useTable({
 		features: rankingFeatures,
 		columns,
 		data,
-		getRowId: row => row.userId,
+		getRowId: (row) => row.userId,
 		initialState: {
 			sorting: [{ id: 'position', desc: false }],
 			pagination: { pageIndex: 0, pageSize: PAGE_SIZE },
@@ -62,12 +58,11 @@ export function RankingTable({
 	const { pageIndex, pageSize } = table.state.pagination;
 	const currentUserIndex = table
 		.getPrePaginatedRowModel()
-		.rows.findIndex(row => row.original.userId === currentUserId);
+		.rows.findIndex((row) => row.original.userId === currentUserId);
 	const currentUserPageIndex =
 		currentUserIndex !== -1 ? Math.floor(currentUserIndex / pageSize) : null;
 	const isSearchable = variant === 'season';
-	const canShowCurrentUser =
-		currentUserPageIndex !== null && table.getPageCount() > 1;
+	const canShowCurrentUser = currentUserPageIndex !== null && table.getPageCount() > 1;
 
 	return (
 		<div className="space-y-4">
@@ -78,7 +73,7 @@ export function RankingTable({
 							aria-label="Szukaj gracza"
 							type="search"
 							value={search}
-							onChange={event => nameColumn?.setFilterValue(event.target.value)}
+							onChange={(event) => nameColumn?.setFilterValue(event.target.value)}
 							placeholder="Szukaj gracza..."
 							className="max-w-xs"
 						/>
@@ -98,9 +93,9 @@ export function RankingTable({
 			)}
 			<Table aria-label="Ranking graczy">
 				<TableHeader>
-					{table.getHeaderGroups().map(headerGroup => (
+					{table.getHeaderGroups().map((headerGroup) => (
 						<TableRow key={headerGroup.id}>
-							{headerGroup.headers.map(header => {
+							{headerGroup.headers.map((header) => {
 								const direction = header.column.getIsSorted();
 
 								return (
@@ -136,18 +131,15 @@ export function RankingTable({
 							</TableCell>
 						</TableRow>
 					) : (
-						rows.map(row => (
+						rows.map((row) => (
 							<TableRow
 								key={row.id}
 								className={cn({
 									'bg-primary/5': row.original.userId === currentUserId,
 								})}
 							>
-								{row.getAllCells().map(cell => (
-									<TableCell
-										key={cell.id}
-										className={cell.column.columnDef.meta?.className}
-									>
+								{row.getAllCells().map((cell) => (
+									<TableCell key={cell.id} className={cell.column.columnDef.meta?.className}>
 										<table.FlexRender cell={cell} />
 									</TableCell>
 								))}

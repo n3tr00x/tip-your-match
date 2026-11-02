@@ -1,9 +1,10 @@
 import type { FixtureUncheckedCreateInput } from '@/app/generated/prisma/models';
-import { prisma } from '@/lib/prisma';
-import { requireEnvVariable } from '@/lib/utils';
+
 import { fetchSeasonFixtures } from '@/lib/football-api/client';
 import { mapMatchToFixtureData } from '@/lib/football-api/mappers';
 import { syncPredictionPoints } from '@/lib/predictions/score-fixtures';
+import { prisma } from '@/lib/prisma';
+import { requireEnvVariable } from '@/lib/utils';
 
 type ExistingFixture = Pick<
 	FixtureUncheckedCreateInput,
@@ -18,14 +19,10 @@ type ExistingFixture = Pick<
 	| 'awayScore'
 >;
 
-function hasFixtureChanged(
-	existing: ExistingFixture,
-	incoming: ExistingFixture,
-) {
+function hasFixtureChanged(existing: ExistingFixture, incoming: ExistingFixture) {
 	return (
 		existing.round !== incoming.round ||
-		new Date(existing.kickoff).getTime() !==
-			new Date(incoming.kickoff).getTime() ||
+		new Date(existing.kickoff).getTime() !== new Date(incoming.kickoff).getTime() ||
 		existing.status !== incoming.status ||
 		existing.homeTeam !== incoming.homeTeam ||
 		existing.awayTeam !== incoming.awayTeam ||
@@ -55,7 +52,7 @@ export async function syncFixtures() {
 	};
 
 	return prisma.$transaction(
-		async tx => {
+		async (tx) => {
 			const season = await tx.season.upsert({
 				where: { year },
 				create: seasonData,
@@ -77,12 +74,10 @@ export async function syncFixtures() {
 					awayScore: true,
 				},
 			});
-			const existingByApiId = new Map(
-				existingFixtures.map(fixture => [fixture.apiId, fixture]),
-			);
+			const existingByApiId = new Map(existingFixtures.map((fixture) => [fixture.apiId, fixture]));
 			const changedFixtures = matches
-				.map(match => mapMatchToFixtureData(match, season.id))
-				.filter(fixture => {
+				.map((match) => mapMatchToFixtureData(match, season.id))
+				.filter((fixture) => {
 					const existing = existingByApiId.get(fixture.apiId);
 					return !existing || hasFixtureChanged(existing, fixture);
 				});
@@ -109,10 +104,7 @@ export async function syncFixtures() {
 			});
 
 			const fixtureIdsToScore = [
-				...new Set([
-					...changedFixtureIds,
-					...pendingFixtures.map(fixture => fixture.id),
-				]),
+				...new Set([...changedFixtureIds, ...pendingFixtures.map((fixture) => fixture.id)]),
 			];
 
 			const scored = await syncPredictionPoints(tx, fixtureIdsToScore);

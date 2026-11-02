@@ -1,13 +1,11 @@
 import type { Metadata } from 'next';
+
+import { countCreatedLeagues, getCurrentSeasonId, getUserLeagues } from '@/lib/leagues/queries';
+import { requireSession } from '@/lib/session';
+
 import { CreateLeagueForm } from '@/components/leagues/create-league-form';
 import { JoinLeagueForm } from '@/components/leagues/join-league-form';
 import { LeagueCard } from '@/components/leagues/league-card';
-import {
-	countCreatedLeagues,
-	getCurrentSeasonId,
-	getUserLeagues,
-} from '@/lib/leagues/queries';
-import { requireSession } from '@/lib/session';
 
 export const metadata: Metadata = { title: 'Ligi' };
 
@@ -18,7 +16,7 @@ export default async function LeaguesPage() {
 
 	if (!seasonId) {
 		return (
-			<p className="max-w-7xl mx-auto my-6 text-muted-foreground">
+			<p className="mx-auto my-6 max-w-7xl text-muted-foreground">
 				Sezon nie jest jeszcze dostępny
 			</p>
 		);
@@ -30,16 +28,13 @@ export default async function LeaguesPage() {
 	]);
 
 	return (
-		<div className="max-w-7xl mx-auto my-6 space-y-8">
+		<div className="mx-auto my-6 max-w-7xl space-y-8">
 			<header className="border-b pb-2">
-				<h1 className="font-heading uppercase tracking-widest">Ligi</h1>
+				<h1 className="font-heading tracking-widest uppercase">Ligi</h1>
 			</header>
 
 			<section aria-labelledby="my-leagues" className="space-y-4">
-				<h2
-					id="my-leagues"
-					className="font-heading uppercase tracking-widest text-sm"
-				>
+				<h2 id="my-leagues" className="font-heading text-sm tracking-widest uppercase">
 					Moje ligi ({createdLeaguesCount})
 				</h2>
 				{userLeagues.length === 0 ? (
@@ -48,7 +43,7 @@ export default async function LeaguesPage() {
 					</p>
 				) : (
 					<ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-						{userLeagues.map(league => (
+						{userLeagues.map((league) => (
 							<li key={league.id}>
 								<LeagueCard league={league} />
 							</li>

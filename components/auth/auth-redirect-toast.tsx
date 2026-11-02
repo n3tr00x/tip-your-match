@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+
 import { successSignInToast } from '@/lib/toasts/auth';
 
 export function AuthRedirectToast() {

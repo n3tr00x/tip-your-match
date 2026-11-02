@@ -6,11 +6,7 @@ type LoadingRegionProps = {
 	className?: string;
 };
 
-export function LoadingRegion({
-	children,
-	label,
-	className,
-}: LoadingRegionProps) {
+export function LoadingRegion({ children, label, className }: LoadingRegionProps) {
 	return (
 		<div aria-busy="true" className={className}>
 			<span role="status" className="sr-only">

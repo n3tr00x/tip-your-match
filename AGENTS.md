@@ -90,7 +90,8 @@ Football match prediction app: users join leagues, predict match scores and comp
 - Dates: timezone `Europe/Warsaw`, locale `pl-PL`; reuse or extend formatters in `lib/date.ts`
 - User-facing text (UI, validation messages, toasts, script logs) is Polish; identifiers and code comments are English
 - Accessibility: link inputs to hints and errors with `useId()` + `aria-describedby`; loading UIs use `<LoadingRegion label>`
-- Code style: tabs, single quotes, kebab-case file names; no formatter is configured, so match the surrounding code
+- Code style: kebab-case file names; formatting is handled by Prettier (`.prettierrc.json`, incl. Tailwind class sorting) - run `pnpm exec prettier --write <files>`
+- Import order is enforced by ESLint `simple-import-sort` (groups in `eslint.config.mjs`); fix with `pnpm lint --fix`
 - Commits: Conventional Commits (`feat:`, `fix:`, `refactor:`); branches `feat/...`, `fix/...`
 
 ## Do not

@@ -1,11 +1,13 @@
+import { type Round } from '@/lib/schedule/rounds';
+
+import { RoundItem } from '@/components/schedule/round-item';
+
 import {
 	Accordion,
+	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
-	AccordionContent,
 } from '@/components/ui/accordion';
-import { RoundItem } from '@/components/schedule/round-item';
-import { type Round } from '@/lib/schedule/rounds';
 
 export type FinishedRoundsProps = {
 	finishedRounds: Round[];
@@ -19,12 +21,10 @@ export function FinishedRounds({ finishedRounds }: FinishedRoundsProps) {
 	return (
 		<Accordion>
 			<AccordionItem value="finished">
-				<AccordionTrigger>
-					Zakończone kolejki ({finishedRounds.length})
-				</AccordionTrigger>
+				<AccordionTrigger>Zakończone kolejki ({finishedRounds.length})</AccordionTrigger>
 				<AccordionContent>
 					<Accordion>
-						{finishedRounds.map(round => (
+						{finishedRounds.map((round) => (
 							<RoundItem key={round.round} round={round} state="finished" />
 						))}
 					</Accordion>

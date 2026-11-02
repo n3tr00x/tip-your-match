@@ -1,17 +1,16 @@
 import 'server-only';
+
 import { cache } from 'react';
+
+import type { LeagueDetails, LeagueSummary } from '@/lib/leagues/types';
 import { prisma } from '@/lib/prisma';
 import { getSeasonFixtures } from '@/lib/schedule/queries';
 import { resolveCurrentRound } from '@/lib/schedule/rounds';
-import type { LeagueDetails, LeagueSummary } from '@/lib/leagues/types';
 import { requireEnvVariable } from '@/lib/utils';
 
 export async function getCurrentSeasonRound(now = new Date()) {
 	const seasonYear = Number(requireEnvVariable('FOOTBALL_API_SEASON'));
-	const { seasonId, fixtures, currentMatchday } = await getSeasonFixtures(
-		seasonYear,
-		now,
-	);
+	const { seasonId, fixtures, currentMatchday } = await getSeasonFixtures(seasonYear, now);
 
 	const round = resolveCurrentRound(fixtures, currentMatchday, now);
 
@@ -36,10 +35,7 @@ export async function countCreatedLeagues(userId: string, seasonId: string) {
 	return prisma.league.count({ where: { adminId: userId, seasonId } });
 }
 
-export async function getUserLeagues(
-	userId: string,
-	seasonId: string,
-): Promise<LeagueSummary[]> {
+export async function getUserLeagues(userId: string, seasonId: string): Promise<LeagueSummary[]> {
 	const leagues = await prisma.league.findMany({
 		where: { seasonId, members: { some: { userId } } },
 		select: {
