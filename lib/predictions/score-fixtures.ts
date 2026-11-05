@@ -1,4 +1,5 @@
 import type { Prisma } from '@/app/generated/prisma/client';
+
 import { calculatePoints } from '@/lib/predictions/scoring';
 
 export async function syncPredictionPoints(

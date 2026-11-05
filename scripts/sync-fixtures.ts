@@ -1,14 +1,15 @@
 import 'dotenv/config';
-import { prisma } from '@/lib/prisma';
+
 import { syncFixtures } from '@/lib/football-api/sync-fixtures';
+import { prisma } from '@/lib/prisma';
 
 syncFixtures()
-	.then(syncedFixtures => {
+	.then((syncedFixtures) => {
 		console.log(
 			`Zsynchronizowano ${syncedFixtures.updated} z ${syncedFixtures.total} meczów. Rozliczono ${syncedFixtures.scored} typów.`,
 		);
 	})
-	.catch(error => {
+	.catch((error) => {
 		console.error('Synchronizacja terminarza nie powiodła się:', error);
 		process.exitCode = 1;
 	})

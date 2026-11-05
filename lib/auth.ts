@@ -1,8 +1,10 @@
 import { APIError, betterAuth } from 'better-auth';
-import { nextCookies } from 'better-auth/next-js';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
+import { nextCookies } from 'better-auth/next-js';
+
 import { prisma } from '@/lib/prisma';
 import { requireEnvVariable } from '@/lib/utils';
+
 import { profileSchema } from './profile/schema';
 
 const profileUpdateSchema = profileSchema.partial();
@@ -17,7 +19,7 @@ export const auth = betterAuth({
 	databaseHooks: {
 		user: {
 			create: {
-				before: async user => ({ data: { ...user, bio: null } }),
+				before: async (user) => ({ data: { ...user, bio: null } }),
 			},
 			update: {
 				before: async (user, context) => {

@@ -1,8 +1,9 @@
 import 'dotenv/config';
 
 import type { Prisma } from '@/app/generated/prisma/client';
-import { prisma } from '@/lib/prisma';
+
 import { calculatePoints } from '@/lib/predictions/scoring';
+import { prisma } from '@/lib/prisma';
 import { requireEnvVariable } from '@/lib/utils';
 
 const SEED_PREFIX = 'seed-';
@@ -70,12 +71,12 @@ function buildPredictions(
 	const participation = 0.3 + random() * 0.7;
 	const skill = 0.05 + random() * 0.3;
 
-	const rounds = [...new Set(fixtures.map(fixture => fixture.round))];
+	const rounds = [...new Set(fixtures.map((fixture) => fixture.round))];
 	const playedRounds = new Set(rounds.filter(() => random() < participation));
 
 	return fixtures
-		.filter(fixture => playedRounds.has(fixture.round) && random() < 0.9)
-		.map(fixture => {
+		.filter((fixture) => playedRounds.has(fixture.round) && random() < 0.9)
+		.map((fixture) => {
 			const isExact = random() < skill;
 			const prediction = {
 				homeScore: isExact ? fixture.homeScore : pick(GOALS, random),
@@ -107,9 +108,7 @@ async function getFinishedFixtures(seasonYear: number) {
 	});
 
 	return fixtures.flatMap(({ homeScore, awayScore, ...fixture }) =>
-		homeScore === null || awayScore === null
-			? []
-			: [{ ...fixture, homeScore, awayScore }],
+		homeScore === null || awayScore === null ? [] : [{ ...fixture, homeScore, awayScore }],
 	);
 }
 
@@ -127,17 +126,14 @@ async function main() {
 	const fixtures = await getFinishedFixtures(seasonYear);
 
 	if (fixtures.length === 0) {
-		throw new Error(
-			'Brak zakończonych meczów. Uruchom najpierw pnpm sync:fixtures.',
-		);
+		throw new Error('Brak zakończonych meczów. Uruchom najpierw pnpm sync:fixtures.');
 	}
 
 	const random = createRandom(RANDOM_SEED);
 	const users = Array.from({ length: USER_COUNT }, (_, index) => {
 		const id = `${SEED_PREFIX}${String(index + 1).padStart(2, '0')}`;
 		const firstName = FIRST_NAMES[index % FIRST_NAMES.length];
-		const lastName =
-			LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length];
+		const lastName = LAST_NAMES[Math.floor(index / FIRST_NAMES.length) % LAST_NAMES.length];
 
 		return {
 			id,
@@ -145,9 +141,7 @@ async function main() {
 			email: `${id}@example.test`,
 		};
 	});
-	const predictions = users.flatMap(user =>
-		buildPredictions(user.id, fixtures, random),
-	);
+	const predictions = users.flatMap((user) => buildPredictions(user.id, fixtures, random));
 
 	const [original] = users;
 	const twin = {
@@ -156,8 +150,8 @@ async function main() {
 		email: `${SEED_PREFIX}twin@example.test`,
 	};
 	const twinPredictions = predictions
-		.filter(prediction => prediction.userId === original.id)
-		.map(prediction => ({ ...prediction, userId: twin.id }));
+		.filter((prediction) => prediction.userId === original.id)
+		.map((prediction) => ({ ...prediction, userId: twin.id }));
 
 	await prisma.$transaction([
 		prisma.user.createMany({ data: [...users, twin] }),
@@ -172,7 +166,7 @@ async function main() {
 }
 
 main()
-	.catch(error => {
+	.catch((error) => {
 		console.error('Seed rankingu nie powiódł się:', error);
 		process.exitCode = 1;
 	})

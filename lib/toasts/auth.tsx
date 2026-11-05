@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+
 import { toast } from '@/components/ui/toast';
 
 export function errorFormFieldsToast(errors: string | string[]) {

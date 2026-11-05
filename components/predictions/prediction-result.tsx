@@ -1,10 +1,4 @@
-import {
-	CheckIcon,
-	CircleCheckBigIcon,
-	HourglassIcon,
-	XIcon,
-	type LucideIcon,
-} from 'lucide-react';
+import { CheckIcon, CircleCheckBigIcon, HourglassIcon, type LucideIcon, XIcon } from 'lucide-react';
 
 import { POINTS } from '@/lib/predictions/scoring';
 import { cn } from '@/lib/utils';

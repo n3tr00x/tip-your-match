@@ -1,7 +1,11 @@
 'use client';
 
 import { useActionState, useId } from 'react';
+
 import { joinLeague, type LeagueFormState } from '@/lib/actions/leagues';
+
+import { FormErrors } from '@/components/form-errors';
+
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -13,15 +17,11 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { FormErrors } from '@/components/form-errors';
 
 const initialState: LeagueFormState = { success: false };
 
 export function JoinLeagueForm() {
-	const [state, formAction, isPending] = useActionState(
-		joinLeague,
-		initialState,
-	);
+	const [state, formAction, isPending] = useActionState(joinLeague, initialState);
 	const inputId = useId();
 	const errorsId = useId();
 
@@ -29,9 +29,7 @@ export function JoinLeagueForm() {
 		<Card>
 			<CardHeader>
 				<CardTitle>Dołącz do ligi</CardTitle>
-				<CardDescription>
-					Wpisz kod otrzymany od administratora ligi
-				</CardDescription>
+				<CardDescription>Wpisz kod otrzymany od administratora ligi</CardDescription>
 			</CardHeader>
 			<form action={formAction}>
 				<CardContent className="space-y-2">
@@ -47,7 +45,7 @@ export function JoinLeagueForm() {
 						autoCapitalize="characters"
 						spellCheck="false"
 						required
-						className="font-mono uppercase tracking-widest"
+						className="font-mono tracking-widest uppercase"
 					/>
 					<FormErrors id={errorsId} errors={state.errors} />
 				</CardContent>

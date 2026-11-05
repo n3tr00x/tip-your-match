@@ -1,6 +1,7 @@
-import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { cn } from '@/lib/utils';
 
 export function AuthTabs() {
 	const pathname = usePathname();
@@ -8,7 +9,7 @@ export function AuthTabs() {
 	const isRegister = pathname === '/register';
 
 	return (
-		<div className="mb-4 grid w-full grid-cols-2  bg-card p-2">
+		<div className="mb-4 grid w-full grid-cols-2 bg-card p-2">
 			<Link
 				href="/login"
 				className={cn(

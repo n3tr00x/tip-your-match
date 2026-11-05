@@ -6,7 +6,7 @@ export default function PredictionsLoading() {
 	return (
 		<LoadingRegion
 			label="Ładowanie meczów do typowania…"
-			className="max-w-7xl mx-auto my-6 space-y-4"
+			className="mx-auto my-6 max-w-7xl space-y-4"
 		>
 			<HeadingSkeleton />
 			<MatchGridSkeleton />

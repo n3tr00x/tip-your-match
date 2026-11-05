@@ -1,9 +1,13 @@
-import type { Metadata, Viewport } from 'next';
 import { Inter, Roboto } from 'next/font/google';
 
-import { Toaster } from '@/components/ui/toast';
-import { ThemeProvider } from '@/components/theme-provider';
+import type { Metadata, Viewport } from 'next';
+
 import { cn } from '@/lib/utils';
+
+import { ThemeProvider } from '@/components/theme-provider';
+
+import { Toaster } from '@/components/ui/toast';
+
 import './globals.css';
 
 const inter = Inter({
@@ -30,16 +34,10 @@ export default function RootLayout({ children }: LayoutProps<'/'>) {
 	return (
 		<html
 			lang="pl"
-			className={cn(
-				'h-full',
-				'antialiased',
-				roboto.variable,
-				inter.variable,
-				'font-sans',
-			)}
+			className={cn('h-full', 'antialiased', roboto.variable, inter.variable, 'font-sans')}
 			suppressHydrationWarning
 		>
-			<body className="min-h-full flex flex-col">
+			<body className="flex min-h-full flex-col">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="system"

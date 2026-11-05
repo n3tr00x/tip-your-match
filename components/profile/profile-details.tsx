@@ -1,16 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { ProfileForm } from '@/components/profile/profile-form';
-import { Button } from '@/components/ui/button';
-import {
-	Card,
-	CardAction,
-	CardContent,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
+
 import { PencilIcon } from 'lucide-react';
+
+import { ProfileForm } from '@/components/profile/profile-form';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardAction, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 type ProfileDetailsProps = {
 	name: string;
@@ -36,11 +33,7 @@ export function ProfileDetails({ name, bio }: ProfileDetailsProps) {
 			<CardHeader>
 				<CardTitle>O mnie</CardTitle>
 				<CardAction>
-					<Button
-						variant="outline"
-						size="sm"
-						onClick={() => setIsEditing(true)}
-					>
+					<Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
 						<PencilIcon data-icon="inline-start" />
 						Edytuj profil
 					</Button>
@@ -48,7 +41,7 @@ export function ProfileDetails({ name, bio }: ProfileDetailsProps) {
 			</CardHeader>
 			<CardContent>
 				{bio ? (
-					<p className="whitespace-pre-line text-sm">{bio}</p>
+					<p className="text-sm whitespace-pre-line">{bio}</p>
 				) : (
 					<p className="text-sm text-muted-foreground">Brak opisu</p>
 				)}

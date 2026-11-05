@@ -1,6 +1,10 @@
 'use client';
 
 import { useActionState, useId } from 'react';
+
+import { createLeague, type LeagueFormState } from '@/lib/actions/leagues';
+import { LEAGUE_LIMITS } from '@/lib/leagues/rules';
+
 import {
 	Card,
 	CardContent,
@@ -10,11 +14,10 @@ import {
 	CardTitle,
 } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { createLeague, type LeagueFormState } from '@/lib/actions/leagues';
-import { LEAGUE_LIMITS } from '@/lib/leagues/rules';
-import { Input } from '../ui/input';
+
 import { FormErrors } from '../form-errors';
 import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 
 type CreateLeagueFormProps = {
 	createdCount: number;
@@ -23,10 +26,7 @@ type CreateLeagueFormProps = {
 const initialState: LeagueFormState = { success: false };
 
 export function CreateLeagueForm({ createdCount }: CreateLeagueFormProps) {
-	const [state, formAction, isPending] = useActionState(
-		createLeague,
-		initialState,
-	);
+	const [state, formAction, isPending] = useActionState(createLeague, initialState);
 
 	const inputId = useId();
 	const errorsId = useId();

@@ -1,5 +1,6 @@
-import type { RankingStanding } from '@/lib/ranking/types';
 import Link from 'next/link';
+
+import type { RankingStanding } from '@/lib/ranking/types';
 
 type StandingStatsProps = {
 	standing: RankingStanding | null;
@@ -24,30 +25,20 @@ export function StandingStats({ standing }: StandingStatsProps) {
 		<div className="space-y-2">
 			<dl className="grid grid-cols-2 gap-4">
 				<div className="space-y-1 border-2 p-4">
-					<dt className="text-xs uppercase tracking-widest text-muted-foreground">
+					<dt className="text-xs tracking-widest text-muted-foreground uppercase">
 						Miejsce w rankingu
 					</dt>
 					<dd className="font-heading text-2xl tabular-nums">
 						{standing.position}
-						<span className="text-sm text-muted-foreground">
-							{' '}
-							/ {standing.totalPlayers}
-						</span>
+						<span className="text-sm text-muted-foreground"> / {standing.totalPlayers}</span>
 					</dd>
 				</div>
 				<div className="space-y-1 border-2 p-4">
-					<dt className="text-xs uppercase tracking-widest text-muted-foreground">
-						Punkty
-					</dt>
-					<dd className="font-heading text-2xl tabular-nums">
-						{standing.points}
-					</dd>
+					<dt className="text-xs tracking-widest text-muted-foreground uppercase">Punkty</dt>
+					<dd className="font-heading text-2xl tabular-nums">{standing.points}</dd>
 				</div>
 			</dl>
-			<Link
-				href="/ranking"
-				className="text-xs text-primary underline-offset-4 hover:underline"
-			>
+			<Link href="/ranking" className="text-xs text-primary underline-offset-4 hover:underline">
 				Zobacz pełny ranking
 			</Link>
 		</div>

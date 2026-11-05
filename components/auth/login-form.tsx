@@ -1,22 +1,23 @@
 'use client';
 
+import { SubmitEvent, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SubmitEvent, useTransition } from 'react';
 
-import { AuthTabs } from '@/components/auth/auth-tabs';
-import { OAuthButtons } from '@/components/auth/oauth-buttons';
-import { Button } from '@/components/ui/button';
 import { signin } from '@/lib/actions/auth';
 import { errorFormFieldsToast, successSignInToast } from '@/lib/toasts/auth';
 
+import { AuthTabs } from '@/components/auth/auth-tabs';
+import { OAuthButtons } from '@/components/auth/oauth-buttons';
+
+import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -53,9 +54,7 @@ export function LoginForm() {
 			<Card>
 				<CardHeader className="space-y-2">
 					<CardTitle className="text-2xl">Witamy ponownie</CardTitle>
-					<CardDescription>
-						Zaloguj się, aby kontynuować dostęp do swojego konta.
-					</CardDescription>
+					<CardDescription>Zaloguj się, aby kontynuować dostęp do swojego konta.</CardDescription>
 				</CardHeader>
 				<form onSubmit={signInHandler}>
 					<CardContent className="space-y-4">

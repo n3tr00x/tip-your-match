@@ -1,4 +1,5 @@
 import { randomInt } from 'node:crypto';
+
 import { CODE_ALPHABET, CODE_LENGTH } from '@/lib/leagues/rules';
 
 export function generateLeagueCode() {

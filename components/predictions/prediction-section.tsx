@@ -1,13 +1,12 @@
 import { useId } from 'react';
 
 import type { Fixture } from '@/app/generated/prisma/client';
+
+import { isFixtureOpenForPrediction, type UserPrediction } from '@/lib/predictions/rules';
+import { sumScoredPoints } from '@/lib/predictions/scoring';
+
 import { PredictionCard } from '@/components/predictions/prediction-card';
 import { PredictionSectionHeader } from '@/components/predictions/prediction-section-header';
-import {
-	isFixtureOpenForPrediction,
-	type UserPrediction,
-} from '@/lib/predictions/rules';
-import { sumScoredPoints } from '@/lib/predictions/scoring';
 
 type PredictionSectionProps = {
 	title: string;
@@ -16,16 +15,9 @@ type PredictionSectionProps = {
 	now: Date;
 };
 
-export function PredictionSection({
-	title,
-	fixtures,
-	predictions,
-	now,
-}: PredictionSectionProps) {
+export function PredictionSection({ title, fixtures, predictions, now }: PredictionSectionProps) {
 	const headingId = useId();
-	const totalPoints = sumScoredPoints(
-		fixtures.map(fixture => predictions[fixture.id]?.points),
-	);
+	const totalPoints = sumScoredPoints(fixtures.map((fixture) => predictions[fixture.id]?.points));
 
 	return (
 		<section aria-labelledby={headingId} className="space-y-4">
@@ -37,7 +29,7 @@ export function PredictionSection({
 				totalPoints={totalPoints}
 			/>
 			<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-				{fixtures.map(fixture => (
+				{fixtures.map((fixture) => (
 					<PredictionCard
 						key={fixture.id}
 						fixture={fixture}

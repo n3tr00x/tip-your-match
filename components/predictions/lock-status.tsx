@@ -1,6 +1,7 @@
 import { ClockIcon, LockIcon } from 'lucide-react';
 
 import { Fixture } from '@/app/generated/prisma/client';
+
 import { formatMatchDate } from '@/lib/date';
 import { STATUS_LABELS } from '@/lib/fixture-status';
 import { getPredictionDeadline } from '@/lib/predictions/rules';

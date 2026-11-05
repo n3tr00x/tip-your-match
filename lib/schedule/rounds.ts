@@ -1,4 +1,5 @@
 import type { Fixture } from '@/app/generated/prisma/client';
+
 import { isFixtureOpenForPrediction } from '@/lib/predictions/rules';
 
 export type Round = {
@@ -31,20 +32,17 @@ export function groupFixturesByRound(fixtures: Fixture[]) {
 	})).sort((a, b) => a.round - b.round);
 }
 
-export function getCurrentRound(
-	fixtures: Fixture[],
-	now = new Date(),
-): number | undefined {
+export function getCurrentRound(fixtures: Fixture[], now = new Date()): number | undefined {
 	const playable = fixtures.filter(isPlayable);
-	const roundNumbers = playable.map(fixture => fixture.round);
+	const roundNumbers = playable.map((fixture) => fixture.round);
 
 	if (roundNumbers.length === 0) {
 		return undefined;
 	}
 
 	const startedRounds = playable
-		.filter(fixture => fixture.kickoff <= now)
-		.map(fixture => fixture.round);
+		.filter((fixture) => fixture.kickoff <= now)
+		.map((fixture) => fixture.round);
 
 	if (startedRounds.length === 0) {
 		return Math.min(...roundNumbers);
@@ -52,8 +50,8 @@ export function getCurrentRound(
 
 	const lastStartedRound = Math.max(...startedRounds);
 	const isLastStartedRoundFinished = playable
-		.filter(fixture => fixture.round === lastStartedRound)
-		.every(fixture => fixture.status === 'FINISHED');
+		.filter((fixture) => fixture.round === lastStartedRound)
+		.every((fixture) => fixture.status === 'FINISHED');
 	const nextRound = lastStartedRound + 1;
 
 	if (isLastStartedRoundFinished && roundNumbers.includes(nextRound)) {
@@ -69,22 +67,18 @@ export function resolveCurrentRound(
 	now = new Date(),
 ) {
 	const isKnownRound =
-		currentMatchday !== undefined &&
-		fixtures.some(fixture => fixture.round === currentMatchday);
+		currentMatchday !== undefined && fixtures.some((fixture) => fixture.round === currentMatchday);
 
 	return isKnownRound ? currentMatchday : getCurrentRound(fixtures, now);
 }
 
 export function isRoundCompleted(round: Round) {
 	return round.fixtures.every(
-		fixture => fixture.status === 'FINISHED' || fixture.status === 'CANCELLED',
+		(fixture) => fixture.status === 'FINISHED' || fixture.status === 'CANCELLED',
 	);
 }
 
-export function getRoundState(
-	round: Round,
-	currentRound: number | undefined,
-): RoundState {
+export function getRoundState(round: Round, currentRound: number | undefined): RoundState {
 	if (currentRound === undefined) {
 		return 'upcoming';
 	}
@@ -106,9 +100,7 @@ export function getRoundSummary(round: Round) {
 	const totalFixtures = round.fixtures.length;
 	const firstKickoff = round.fixtures[0].kickoff;
 	const lastKickoff = round.fixtures[round.fixtures.length - 1].kickoff;
-	const finishedCount = round.fixtures.filter(
-		fixture => fixture.status === 'FINISHED',
-	).length;
+	const finishedCount = round.fixtures.filter((fixture) => fixture.status === 'FINISHED').length;
 
 	return {
 		totalFixtures,
@@ -119,11 +111,9 @@ export function getRoundSummary(round: Round) {
 }
 
 export function partitionRounds(rounds: Round[], currentRound?: number) {
-	const activeRounds = rounds.filter(
-		round => getRoundState(round, currentRound) !== 'finished',
-	);
+	const activeRounds = rounds.filter((round) => getRoundState(round, currentRound) !== 'finished');
 	const finishedRounds = rounds.filter(
-		round => getRoundState(round, currentRound) === 'finished',
+		(round) => getRoundState(round, currentRound) === 'finished',
 	);
 
 	return {
@@ -133,14 +123,13 @@ export function partitionRounds(rounds: Round[], currentRound?: number) {
 }
 
 export function getNextFixture(fixtures: Fixture[], now = new Date()) {
-	return fixtures.find(fixture => isFixtureOpenForPrediction(fixture, now));
+	return fixtures.find((fixture) => isFixtureOpenForPrediction(fixture, now));
 }
 
 export function getLastCompletedRound(fixtures: Fixture[]) {
 	const completedRounds = groupFixturesByRound(fixtures).filter(
-		round =>
-			isRoundCompleted(round) &&
-			round.fixtures.some(fixture => fixture.status === 'FINISHED'),
+		(round) =>
+			isRoundCompleted(round) && round.fixtures.some((fixture) => fixture.status === 'FINISHED'),
 	);
 
 	return completedRounds.at(-1)?.round;

@@ -1,21 +1,21 @@
 'use server';
 
-import { requireSession } from '@/lib/session';
-import { profileSchema } from '@/lib/profile/schema';
-import { auth } from '../auth';
-import { headers } from 'next/headers';
-import { APIError } from 'better-auth';
 import { refresh } from 'next/cache';
+import { headers } from 'next/headers';
+
+import { APIError } from 'better-auth';
+
+import { profileSchema } from '@/lib/profile/schema';
+import { requireSession } from '@/lib/session';
+
+import { auth } from '../auth';
 
 export type ProfileFormState = {
 	success: boolean;
 	errors?: string[];
 };
 
-export async function updateProfile(
-	_previousState: ProfileFormState,
-	formData: FormData,
-) {
+export async function updateProfile(_previousState: ProfileFormState, formData: FormData) {
 	await requireSession();
 
 	const parsed = profileSchema.safeParse({
@@ -26,7 +26,7 @@ export async function updateProfile(
 	if (!parsed.success) {
 		return {
 			success: false,
-			errors: parsed.error.issues.map(issue => issue.message),
+			errors: parsed.error.issues.map((issue) => issue.message),
 		};
 	}
 

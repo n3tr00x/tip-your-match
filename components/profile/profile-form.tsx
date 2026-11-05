@@ -1,21 +1,18 @@
 'use client';
 
 import { useActionState, useId, useState } from 'react';
+
+import { type ProfileFormState, updateProfile } from '@/lib/actions/profile';
+import { PROFILE_LIMITS } from '@/lib/profile/rules';
+import { successProfileToast } from '@/lib/toasts/profile';
+
 import { FormErrors } from '@/components/form-errors';
+
 import { Button } from '@/components/ui/button';
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { updateProfile, type ProfileFormState } from '@/lib/actions/profile';
-import { successProfileToast } from '@/lib/toasts/profile';
-import { PROFILE_LIMITS } from '@/lib/profile/rules';
 
 type ProfileFormProps = {
 	name: string;
@@ -73,9 +70,9 @@ export function ProfileForm({
 							autoComplete="nickname"
 							autoFocus
 							required
-							onChange={event => setName(event.target.value)}
+							onChange={(event) => setName(event.target.value)}
 						/>
-						<p id={nameHintId} className="text-muted-foreground text-xs">
+						<p id={nameHintId} className="text-xs text-muted-foreground">
 							Widoczna w rankingach i ligach.
 						</p>
 					</div>
@@ -89,12 +86,9 @@ export function ProfileForm({
 							maxLength={PROFILE_LIMITS.BIO_MAX}
 							rows={4}
 							placeholder="Kilka słów o sobie i swoim typowaniu"
-							onChange={event => setBio(event.target.value)}
+							onChange={(event) => setBio(event.target.value)}
 						/>
-						<p
-							id={bioCounterId}
-							className="text-right text-xs text-muted-foreground tabular-nums"
-						>
+						<p id={bioCounterId} className="text-right text-xs text-muted-foreground tabular-nums">
 							{bio.length}/{PROFILE_LIMITS.BIO_MAX}
 						</p>
 					</div>
@@ -105,12 +99,7 @@ export function ProfileForm({
 					<Button type="submit" disabled={isPending}>
 						{isPending ? 'Zapisywanie...' : 'Zapisz zmiany'}
 					</Button>
-					<Button
-						type="button"
-						variant="ghost"
-						onClick={onCancel}
-						disabled={isPending}
-					>
+					<Button type="button" variant="ghost" onClick={onCancel} disabled={isPending}>
 						Anuluj
 					</Button>
 				</CardFooter>

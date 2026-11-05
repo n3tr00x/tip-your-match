@@ -1,13 +1,11 @@
 import { HeadingSkeleton } from '@/components/loading/heading-skeleton';
 import { LoadingRegion } from '@/components/loading/loading-region';
+
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function LeaguesLoading() {
 	return (
-		<LoadingRegion
-			label="Ładowanie lig…"
-			className="max-w-7xl mx-auto my-6 space-y-8"
-		>
+		<LoadingRegion label="Ładowanie lig…" className="mx-auto my-6 max-w-7xl space-y-8">
 			<HeadingSkeleton />
 			<div className="space-y-4">
 				<Skeleton className="h-4 w-28" />

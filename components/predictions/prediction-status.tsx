@@ -1,6 +1,8 @@
-import type { FixtureStatus } from '@/app/generated/prisma/enums';
-import { PredictionResult } from '@/components/predictions/prediction-result';
 import { CheckIcon } from 'lucide-react';
+
+import type { FixtureStatus } from '@/app/generated/prisma/enums';
+
+import { PredictionResult } from '@/components/predictions/prediction-result';
 
 type PredictionStatusProps = {
 	status: FixtureStatus;
@@ -8,11 +10,7 @@ type PredictionStatusProps = {
 	points: number | null;
 };
 
-export function PredictionStatus({
-	isSaved,
-	status,
-	points,
-}: PredictionStatusProps) {
+export function PredictionStatus({ isSaved, status, points }: PredictionStatusProps) {
 	if (status === 'FINISHED') {
 		return <PredictionResult isSaved={isSaved} points={points} />;
 	}

@@ -4,9 +4,10 @@ import {
 	filterFn_includesString,
 } from '@tanstack/react-table';
 
-import { rankingFeatures } from '@/components/ranking/ranking-features';
 import type { RankingEntry } from '@/lib/ranking/types';
 import { cn } from '@/lib/utils';
+
+import { rankingFeatures } from '@/components/ranking/ranking-features';
 
 const columnHelper = createColumnHelper<typeof rankingFeatures, RankingEntry>();
 const nameCollator = new Intl.Collator('pl');
@@ -39,19 +40,15 @@ const positionColumn = columnHelper.accessor('position', {
 
 const nameColumn = columnHelper.accessor('name', {
 	header: 'Gracz',
-	sortFn: (rowA, rowB) =>
-		nameCollator.compare(rowA.original.name, rowB.original.name),
+	sortFn: (rowA, rowB) => nameCollator.compare(rowA.original.name, rowB.original.name),
 	filterFn: includesNameIgnoringCaseAndDiacritics,
-	cell: info => {
-		const isCurrentUser =
-			info.row.original.userId === info.table.options.meta?.currentUserId;
+	cell: (info) => {
+		const isCurrentUser = info.row.original.userId === info.table.options.meta?.currentUserId;
 
 		return (
 			<span className={cn({ 'font-semibold': isCurrentUser })}>
 				{info.getValue()}
-				{isCurrentUser && (
-					<span className="ml-1.5 text-xs font-normal text-primary">(Ty)</span>
-				)}
+				{isCurrentUser && <span className="ml-1.5 text-xs font-normal text-primary">(Ty)</span>}
 			</span>
 		);
 	},
@@ -75,7 +72,7 @@ export const rankingColumns = columnHelper.columns([
 	}),
 	columnHelper.accessor('averagePerRound', {
 		header: 'Śr. / kolejkę',
-		cell: info => averageFormatter.format(info.getValue()),
+		cell: (info) => averageFormatter.format(info.getValue()),
 		meta: { className: NUMERIC },
 	}),
 	columnHelper.accessor('exactHits', {
@@ -85,8 +82,4 @@ export const rankingColumns = columnHelper.columns([
 	pointsColumn,
 ]);
 
-export const roundRankingColumns = columnHelper.columns([
-	positionColumn,
-	nameColumn,
-	pointsColumn,
-]);
+export const roundRankingColumns = columnHelper.columns([positionColumn, nameColumn, pointsColumn]);

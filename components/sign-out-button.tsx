@@ -2,10 +2,13 @@
 
 import { useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
+
+import { LogOutIcon } from 'lucide-react';
+
 import { signout } from '@/lib/actions/auth';
 import { errorFormFieldsToast, successSignOutToast } from '@/lib/toasts/auth';
-import { LogOutIcon } from 'lucide-react';
+
+import { Button } from '@/components/ui/button';
 
 export function SignOutButton() {
 	const router = useRouter();
@@ -28,12 +31,7 @@ export function SignOutButton() {
 	};
 
 	return (
-		<Button
-			variant="outline"
-			size="sm"
-			onClick={signOutHandler}
-			disabled={isPending}
-		>
+		<Button variant="outline" size="sm" onClick={signOutHandler} disabled={isPending}>
 			<LogOutIcon />
 			Wyloguj
 		</Button>

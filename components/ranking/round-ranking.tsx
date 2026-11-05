@@ -1,7 +1,8 @@
 import { useId } from 'react';
 
-import { RankingTable } from '@/components/ranking/ranking-table';
 import type { RankingEntry } from '@/lib/ranking/types';
+
+import { RankingTable } from '@/components/ranking/ranking-table';
 
 type RoundRankingProps = {
 	round: number | undefined;
@@ -9,21 +10,14 @@ type RoundRankingProps = {
 	currentUserId: string;
 };
 
-export function RoundRanking({
-	round,
-	ranking,
-	currentUserId,
-}: RoundRankingProps) {
+export function RoundRanking({ round, ranking, currentUserId }: RoundRankingProps) {
 	const headingId = useId();
-	const currentUser = ranking.find(entry => entry.userId === currentUserId);
+	const currentUser = ranking.find((entry) => entry.userId === currentUserId);
 
 	return (
 		<section aria-labelledby={headingId} className="space-y-4">
-			<div className="flex justify-between items-center gap-4 border-b pb-2">
-				<h2
-					id={headingId}
-					className="font-heading uppercase tracking-widest tabular-nums"
-				>
+			<div className="flex items-center justify-between gap-4 border-b pb-2">
+				<h2 id={headingId} className="font-heading tracking-widest uppercase tabular-nums">
 					{round === undefined ? 'Ostatnia kolejka' : `Kolejka ${round}`}
 				</h2>
 				{ranking.length > 0 && (
@@ -31,10 +25,8 @@ export function RoundRanking({
 						{currentUser ? (
 							<>
 								Twoja pozycja:{' '}
-								<span className="font-semibold text-foreground">
-									{currentUser.position}
-								</span>{' '}
-								· {currentUser.points} pkt
+								<span className="font-semibold text-foreground">{currentUser.position}</span> ·{' '}
+								{currentUser.points} pkt
 							</>
 						) : (
 							'Brak twoich typów dla ostatniej kolejki'
@@ -49,11 +41,7 @@ export function RoundRanking({
 						: 'Brak rozliczonych typów w tej kolejce'}
 				</p>
 			) : (
-				<RankingTable
-					data={ranking}
-					currentUserId={currentUserId}
-					variant="round"
-				/>
+				<RankingTable data={ranking} currentUserId={currentUserId} variant="round" />
 			)}
 		</section>
 	);

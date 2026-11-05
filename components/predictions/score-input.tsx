@@ -18,7 +18,7 @@ export function ScoreInput({ name, team, defaultValue }: ScoreInputProps) {
 			min={0}
 			max={20}
 			required
-			className="w-12 shrink-0 text-center font-heading text-lg tabular-nums [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+			className="w-12 shrink-0 [appearance:textfield] text-center font-heading text-lg tabular-nums [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
 		/>
 	);
 }

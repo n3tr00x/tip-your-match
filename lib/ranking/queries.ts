@@ -1,22 +1,19 @@
 import 'server-only';
 
-import { prisma } from '@/lib/prisma';
 import { POINTS } from '@/lib/predictions/scoring';
+import { prisma } from '@/lib/prisma';
 import type { RankingEntry, RankingStanding } from '@/lib/ranking/types';
 
 type RankingRow = Omit<RankingEntry, 'averagePerRound'>;
 
 function toRankingEntries(rows: RankingRow[]): RankingEntry[] {
-	return rows.map(row => ({
+	return rows.map((row) => ({
 		...row,
 		averagePerRound: row.rounds > 0 ? row.points / row.rounds : 0,
 	}));
 }
 
-export async function getRanking(
-	seasonYear: number,
-	round?: number,
-): Promise<RankingEntry[]> {
+export async function getRanking(seasonYear: number, round?: number): Promise<RankingEntry[]> {
 	const roundFilter = round ?? null;
 	const rows = await prisma.$queryRaw<RankingRow[]>`
 		SELECT
@@ -44,9 +41,7 @@ export async function getRanking(
 	return toRankingEntries(rows);
 }
 
-export async function getLeagueRanking(
-	leagueId: string,
-): Promise<RankingEntry[]> {
+export async function getLeagueRanking(leagueId: string): Promise<RankingEntry[]> {
 	const rows = await prisma.$queryRaw<RankingRow[]>`
     SELECT 
       u.id AS "userId",
@@ -84,7 +79,7 @@ export async function getUserStanding(
 	seasonYear: number,
 ): Promise<RankingStanding | null> {
 	const ranking = await getRanking(seasonYear);
-	const entry = ranking.find(row => row.userId === userId);
+	const entry = ranking.find((row) => row.userId === userId);
 
 	if (!entry) {
 		return null;

@@ -1,5 +1,6 @@
-import { formatDateRange } from '@/lib/date';
 import type { Fixture } from '@/app/generated/prisma/client';
+
+import { formatDateRange } from '@/lib/date';
 import { isFixtureOpenForPrediction } from '@/lib/predictions/rules';
 
 type PredictionSectionHeaderProps = {
@@ -18,33 +19,23 @@ export function PredictionSectionHeader({
 	totalPoints,
 }: PredictionSectionHeaderProps) {
 	// Postponed fixtures keep their old kickoff until a new date is set.
-	const datedFixtures = fixtures.filter(
-		fixture => fixture.status !== 'POSTPONED',
-	);
+	const datedFixtures = fixtures.filter((fixture) => fixture.status !== 'POSTPONED');
 	const firstKickoff = datedFixtures.at(0)?.kickoff;
 	const lastKickoff = datedFixtures.at(-1)?.kickoff;
-	const openCount = fixtures.filter(fixture =>
-		isFixtureOpenForPrediction(fixture, now),
-	).length;
+	const openCount = fixtures.filter((fixture) => isFixtureOpenForPrediction(fixture, now)).length;
 
 	return (
 		<div className="flex items-center justify-between gap-4 border-b pb-2">
-			<h2
-				id={headingId}
-				className="font-heading uppercase tracking-widest tabular-nums"
-			>
+			<h2 id={headingId} className="font-heading tracking-widest uppercase tabular-nums">
 				{title}
 			</h2>
 			<div className="flex items-center gap-4 text-xs text-muted-foreground tabular-nums">
 				{firstKickoff && lastKickoff && (
-					<span className="hidden sm:inline">
-						{formatDateRange(firstKickoff, lastKickoff)}
-					</span>
+					<span className="hidden sm:inline">{formatDateRange(firstKickoff, lastKickoff)}</span>
 				)}
 				{totalPoints !== null && (
 					<span>
-						Punkty:{' '}
-						<span className="font-semibold text-foreground">{totalPoints}</span>
+						Punkty: <span className="font-semibold text-foreground">{totalPoints}</span>
 					</span>
 				)}
 				<span>

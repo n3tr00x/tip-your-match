@@ -1,22 +1,20 @@
 'use server';
 
 import { redirect } from 'next/navigation';
+
 import * as z from 'zod';
+
 import { Prisma } from '@/app/generated/prisma/client';
+
+import { generateLeagueCode, normalizeLeagueCode } from '@/lib/leagues/code';
+import { countCreatedLeagues, getCurrentSeasonRound } from '@/lib/leagues/queries';
+import { CODE_LENGTH, LEAGUE_LIMITS } from '@/lib/leagues/rules';
 import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
-import { generateLeagueCode, normalizeLeagueCode } from '@/lib/leagues/code';
-import { CODE_LENGTH, LEAGUE_LIMITS } from '@/lib/leagues/rules';
-import {
-	countCreatedLeagues,
-	getCurrentSeasonRound,
-} from '@/lib/leagues/queries';
 
 const MAX_CODE_ATTEMPTS = 3;
-const UNEXPECTED_ERROR =
-	'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.';
-const SEASON_UNAVAILABLE_ERROR =
-	'Sezon nie jest jeszcze dostępny. Spróbuj ponownie później.';
+const UNEXPECTED_ERROR = 'Wystąpił nieoczekiwany błąd. Spróbuj ponownie później.';
+const SEASON_UNAVAILABLE_ERROR = 'Sezon nie jest jeszcze dostępny. Spróbuj ponownie później.';
 
 const leagueNameSchema = z
 	.string('Podaj nazwę ligi')
@@ -27,15 +25,9 @@ const leagueNameSchema = z
 const leagueCodeSchema = z
 	.string('Podaj kod ligi')
 	.transform(normalizeLeagueCode)
-	.pipe(
-		z
-			.string()
-			.length(CODE_LENGTH, `Kod ligi składa się z ${CODE_LENGTH} znaków`),
-	);
+	.pipe(z.string().length(CODE_LENGTH, `Kod ligi składa się z ${CODE_LENGTH} znaków`));
 
-const leagueIdSchema = z
-	.string('Nieprawidłowa liga')
-	.min(1, 'Nieprawidłowa liga');
+const leagueIdSchema = z.string('Nieprawidłowa liga').min(1, 'Nieprawidłowa liga');
 
 export type LeagueFormState = {
 	success: boolean;
@@ -44,14 +36,11 @@ export type LeagueFormState = {
 };
 
 function getErrorMessages(error: z.ZodError) {
-	return error.issues.map(issue => issue.message);
+	return error.issues.map((issue) => issue.message);
 }
 
 function isUniqueConstraintError(error: unknown) {
-	return (
-		error instanceof Prisma.PrismaClientKnownRequestError &&
-		error.code === 'P2002'
-	);
+	return error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002';
 }
 
 async function createLeagueWithUniqueCode(data: {
@@ -115,9 +104,7 @@ export async function createLeague(
 		if (createdCount >= LEAGUE_LIMITS.MAX_CREATED) {
 			return {
 				success: false,
-				errors: [
-					`Możesz utworzyć maksymalnie ${LEAGUE_LIMITS.MAX_CREATED} lig w sezonie.`,
-				],
+				errors: [`Możesz utworzyć maksymalnie ${LEAGUE_LIMITS.MAX_CREATED} lig w sezonie.`],
 				value,
 			};
 		}
@@ -244,10 +231,9 @@ export async function leaveLeague(
 		});
 
 		if (deletedLeagues === 0) {
-			const { count: deletedMemberships } =
-				await prisma.leagueMember.deleteMany({
-					where: { leagueId, userId },
-				});
+			const { count: deletedMemberships } = await prisma.leagueMember.deleteMany({
+				where: { leagueId, userId },
+			});
 
 			if (deletedMemberships === 0) {
 				return { success: false, errors: ['Nie należysz do tej ligi'] };

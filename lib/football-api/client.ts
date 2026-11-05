@@ -1,14 +1,10 @@
 import { FootballDataMatchesResponse } from '@/lib/football-api/types';
 import { requireEnvVariable } from '@/lib/utils';
 
-export async function fetchSeasonFixtures(
-	season: number,
-): Promise<FootballDataMatchesResponse> {
+export async function fetchSeasonFixtures(season: number): Promise<FootballDataMatchesResponse> {
 	const FOOTBALL_API_URL = requireEnvVariable('FOOTBALL_API_BASE_URL');
 	const FOOTBALL_API_KEY = requireEnvVariable('FOOTBALL_API_KEY');
-	const FOOTBALL_API_COMPETITION_ID = requireEnvVariable(
-		'FOOTBALL_API_COMPETITION_ID',
-	);
+	const FOOTBALL_API_COMPETITION_ID = requireEnvVariable('FOOTBALL_API_COMPETITION_ID');
 
 	const url = `${FOOTBALL_API_URL}/competitions/${FOOTBALL_API_COMPETITION_ID}/matches?season=${season}`;
 	const headers: HeadersInit = {

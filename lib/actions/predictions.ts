@@ -1,10 +1,11 @@
 'use server';
 
 import { refresh } from 'next/cache';
+
 import * as z from 'zod';
 
-import { prisma } from '@/lib/prisma';
 import { isFixtureOpenForPrediction } from '@/lib/predictions/rules';
+import { prisma } from '@/lib/prisma';
 import { requireSession } from '@/lib/session';
 
 const SCORE_ERROR = 'Wynik musi być liczbą całkowitą od 0 do 20';
@@ -14,11 +15,7 @@ const scoreSchema = z
 	.trim()
 	.min(1, 'Podaj wynik obu drużyn')
 	.pipe(
-		z.coerce
-			.number<string>(SCORE_ERROR)
-			.int(SCORE_ERROR)
-			.min(0, SCORE_ERROR)
-			.max(20, SCORE_ERROR),
+		z.coerce.number<string>(SCORE_ERROR).int(SCORE_ERROR).min(0, SCORE_ERROR).max(20, SCORE_ERROR),
 	);
 
 const predictionSchema = z.object({

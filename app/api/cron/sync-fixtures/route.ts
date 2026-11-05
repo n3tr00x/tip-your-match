@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { requireEnvVariable } from '@/lib/utils';
+
 import { syncFixtures } from '@/lib/football-api/sync-fixtures';
+import { requireEnvVariable } from '@/lib/utils';
 
 export const maxDuration = 60;
 
@@ -20,9 +21,6 @@ export async function GET(request: NextRequest) {
 		return NextResponse.json(result);
 	} catch (error) {
 		console.error('Failed to sync fixtures:', error);
-		return NextResponse.json(
-			{ error: 'Failed to sync fixtures' },
-			{ status: 500 },
-		);
+		return NextResponse.json({ error: 'Failed to sync fixtures' }, { status: 500 });
 	}
 }

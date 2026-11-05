@@ -1,9 +1,7 @@
 import { FixtureStatus } from '@/app/generated/prisma/enums';
 import { FixtureUncheckedCreateInput } from '@/app/generated/prisma/models';
-import {
-	FootballDataMatch,
-	FootballDataMatchStatus,
-} from '@/lib/football-api/types';
+
+import { FootballDataMatch, FootballDataMatchStatus } from '@/lib/football-api/types';
 
 function mapStatus(status: FootballDataMatchStatus): FixtureStatus {
 	switch (status) {

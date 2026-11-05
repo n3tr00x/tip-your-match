@@ -3,34 +3,22 @@
 import { useActionState } from 'react';
 
 import type { Fixture } from '@/app/generated/prisma/client';
-import { LockStatus } from '@/components/predictions/lock-status';
-import { ScoreInput } from '@/components/predictions/score-input';
-import {
-	getResultVariant,
-	type PointsValue,
-} from '@/components/predictions/prediction-result';
-import { PredictionStatus } from '@/components/predictions/prediction-status';
-import { MatchScore } from '@/components/predictions/match-score';
-import { TeamInfo } from '@/components/team-info';
-import { Button } from '@/components/ui/button';
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
-import {
-	savePrediction,
-	type PredictionFormState,
-} from '@/lib/actions/predictions';
+
+import { type PredictionFormState, savePrediction } from '@/lib/actions/predictions';
 import { formatMatchDate } from '@/lib/date';
 import { type UserPrediction } from '@/lib/predictions/rules';
-import {
-	errorPredictionToast,
-	successPredictionToast,
-} from '@/lib/toasts/predictions';
+import { errorPredictionToast, successPredictionToast } from '@/lib/toasts/predictions';
 import { cn } from '@/lib/utils';
+
+import { LockStatus } from '@/components/predictions/lock-status';
+import { MatchScore } from '@/components/predictions/match-score';
+import { getResultVariant, type PointsValue } from '@/components/predictions/prediction-result';
+import { PredictionStatus } from '@/components/predictions/prediction-status';
+import { ScoreInput } from '@/components/predictions/score-input';
+import { TeamInfo } from '@/components/team-info';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 export type PredictionCardProps = {
 	fixture: Fixture;
@@ -38,11 +26,7 @@ export type PredictionCardProps = {
 	prediction?: UserPrediction;
 };
 
-export function PredictionCard({
-	fixture,
-	prediction,
-	isOpen,
-}: PredictionCardProps) {
+export function PredictionCard({ fixture, prediction, isOpen }: PredictionCardProps) {
 	const [state, formAction, isPending] = useActionState(
 		async (previousState: PredictionFormState, formData: FormData) => {
 			let result: PredictionFormState;
@@ -66,11 +50,7 @@ export function PredictionCard({
 			}
 
 			if (result.success && result.values) {
-				successPredictionToast(
-					fixture.homeTeam,
-					fixture.awayTeam,
-					result.values,
-				);
+				successPredictionToast(fixture.homeTeam, fixture.awayTeam, result.values);
 			}
 
 			if (!result.success && result.errors) {
@@ -93,7 +73,7 @@ export function PredictionCard({
 		<Card
 			size="sm"
 			className={cn(
-				'ring-0 border-2 shadow',
+				'border-2 shadow ring-0',
 				resultVariant?.cardClassName ?? {
 					'border-primary/75': isOpen,
 					'border-border': !isOpen,
@@ -101,13 +81,11 @@ export function PredictionCard({
 			)}
 		>
 			<form action={formAction} className="flex flex-col gap-(--card-spacing)">
-				<CardHeader className="flex justify-between items-center">
-					<CardTitle className="text-muted-foreground tracking-widest text-[0.625rem] uppercase">
-						{fixture.status === 'POSTPONED'
-							? 'Termin do ustalenia'
-							: `${date} · ${time}`}
+				<CardHeader className="flex items-center justify-between">
+					<CardTitle className="text-[0.625rem] tracking-widest text-muted-foreground uppercase">
+						{fixture.status === 'POSTPONED' ? 'Termin do ustalenia' : `${date} · ${time}`}
 					</CardTitle>
-					<span className="flex items-center gap-1 text-muted-foreground tracking-widest text-[0.625rem] uppercase">
+					<span className="flex items-center gap-1 text-[0.625rem] tracking-widest text-muted-foreground uppercase">
 						<LockStatus fixture={fixture} isOpen={isOpen} />
 					</span>
 				</CardHeader>
@@ -116,7 +94,7 @@ export function PredictionCard({
 
 				<fieldset disabled={!isOpen || isPending} className="contents">
 					<CardContent className="flex flex-col gap-y-4">
-						<div className="flex justify-between items-center gap-4">
+						<div className="flex items-center justify-between gap-4">
 							<TeamInfo name={fixture.homeTeam} logo={fixture.homeTeamLogo} />
 							<ScoreInput
 								name="homeScore"
@@ -124,7 +102,7 @@ export function PredictionCard({
 								defaultValue={state.values?.homeScore ?? prediction?.homeScore}
 							/>
 						</div>
-						<div className="flex justify-between items-center gap-4">
+						<div className="flex items-center justify-between gap-4">
 							<TeamInfo name={fixture.awayTeam} logo={fixture.awayTeamLogo} />
 							<ScoreInput
 								name="awayScore"
@@ -133,7 +111,7 @@ export function PredictionCard({
 							/>
 						</div>
 					</CardContent>
-					<CardFooter className="justify-between gap-4 text-[0.625rem] uppercase tracking-widest">
+					<CardFooter className="justify-between gap-4 text-[0.625rem] tracking-widest uppercase">
 						<PredictionStatus
 							status={fixture.status}
 							points={prediction?.points ?? null}

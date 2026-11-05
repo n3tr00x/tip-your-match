@@ -5,10 +5,7 @@ type Score = {
 	awayScore: number | null;
 };
 
-export function getMatchOutcome({
-	homeScore,
-	awayScore,
-}: Score): MatchOutcome | null {
+export function getMatchOutcome({ homeScore, awayScore }: Score): MatchOutcome | null {
 	if (homeScore === null || awayScore === null) {
 		return null;
 	}

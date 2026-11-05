@@ -1,11 +1,15 @@
 'use client';
 
+import { SubmitEvent, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { SubmitEvent, useTransition } from 'react';
+
+import { signup } from '@/lib/actions/auth';
+import { errorFormFieldsToast, successSignUpToast } from '@/lib/toasts/auth';
 
 import { AuthTabs } from '@/components/auth/auth-tabs';
 import { OAuthButtons } from '@/components/auth/oauth-buttons';
+
 import { Button } from '@/components/ui/button';
 import {
 	Card,
@@ -17,8 +21,6 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { signup } from '@/lib/actions/auth';
-import { errorFormFieldsToast, successSignUpToast } from '@/lib/toasts/auth';
 
 export function RegisterForm() {
 	const router = useRouter();
@@ -50,9 +52,7 @@ export function RegisterForm() {
 			<Card>
 				<CardHeader className="space-y-2">
 					<CardTitle className="text-2xl">Utwórz konto</CardTitle>
-					<CardDescription>
-						Wypełnij dane, aby założyć nowe konto w kilka sekund.
-					</CardDescription>
+					<CardDescription>Wypełnij dane, aby założyć nowe konto w kilka sekund.</CardDescription>
 				</CardHeader>
 				<form onSubmit={signUpHandler}>
 					<CardContent className="space-y-4">

@@ -1,13 +1,11 @@
 import { LoadingRegion } from '@/components/loading/loading-region';
 import { TableSkeleton } from '@/components/loading/table-skeleton';
+
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function LeagueLoading() {
 	return (
-		<LoadingRegion
-			label="Ładowanie ligi…"
-			className="max-w-7xl mx-auto my-6 space-y-8"
-		>
+		<LoadingRegion label="Ładowanie ligi…" className="mx-auto my-6 max-w-7xl space-y-8">
 			<div className="flex flex-wrap items-center justify-between gap-4 border-b pb-2">
 				<Skeleton className="h-5 w-48" />
 				<Skeleton className="h-9 w-40" />
